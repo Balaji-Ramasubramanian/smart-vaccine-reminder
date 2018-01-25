@@ -76,9 +76,16 @@ class MessengerBot
 		say(id,"What is #{kid_name}'s date of birth?")
 		Bot.on :message do |message|
 			kid_dob = message.text
-			kid_dob = Date.parse kid_dob
-			say(id,"Got it, #{kid_dob} right?")
-			get_gender(id,kid_name,kid_dob)
+			begin
+				dob = Date.parse kid_dob
+			rescue ArgumentError
+				say(id,"Invalid Date , try DD-MM-YYYY format")
+				get_dob(id,kid_name)
+			end
+			if dob !=nil then
+				say(id,"Got it, #{dob} right?")
+				get_gender(id,kid_name,dob)
+			end
 		end
 	end
 
@@ -93,9 +100,12 @@ class MessengerBot
 				say(id,"Please provide a valid gender!")
 				get_gender(id,kid_name,kid_dob)
 			end
-			puts "#{kid_gender}"
-			VaccinationScheduleEditor.new.add_new(id,kid_name,kid_gender,kid_dob)
-			say(id,"Thanks for registering your kid details. We will notify you before the vaccination days.")
+
+			if kid_gender !=nil then
+				puts "#{kid_gender}"
+				VaccinationScheduleEditor.new.add_new_kid(id,kid_name,kid_gender,kid_dob)
+				say(id,"Thanks for registering your kid details. We will notify you before the vaccination days.")
+			end
 		end
 	end
 
@@ -118,22 +128,33 @@ class MessengerBot
 				kid_gender = "female"
 			else
 				say(id,"Please provide a valid gender!")
-				edit_kid_gender(id)
+				edit_kid_gender(id,)
 			end
-			user.update_attributes(:kid_gender => kid_gender)
-			say(id,"Done, We edited your Kid Gender!")
+
+			if kid_gender !=nil then
+				user.update_attributes(:kid_gender => kid_gender)
+				say(id,"Done, We edited your Kid Gender!")
+			end
 		end
 	end
 
 	def self.edit_kid_dob(id)
 		user = VaccinationSchedule.find_by_parent_facebook_userid(id)
-		say(id,"What is your kid Date of birth?")
+		say(id,"What is #{user.kid_name}'s date of birth?")
 		Bot.on :message do |message|
-			say(id,"inside kid_dob")
 			kid_dob = message.text
-			kid_dob = Date.parse kid_dob
-			user.update_attributes(:kid_dob => kid_dob)	
-			say(id,"Done, We edited your Kid Date Of Birth!")		
+			begin
+				dob = Date.parse kid_dob
+			rescue ArgumentError
+				say(id,"Invalid Date , try DD-MM-YYYY format")
+				edit_kid_dob(id)
+			end
+			if dob !=nil then
+				say(id,"Got it, #{dob} right?")
+				user.update_attributes(:kid_dob => kid_dob)
+				VaccinationScheduleEditor.new.update_kid_record(id,dob)
+				say(id,"Done, We edited your Kid Date Of Birth!")
+			end
 		end
 	end
 
@@ -190,13 +211,10 @@ class MessengerBot
 			say(id,"Hey #{@first_name} #{@last_name}! Glad to have you on board. I will keep reminding you about the vaccination days for your kids.")
 			initial_config(id)
 		when "UPCOMING_VACCINATIONS"
-			puts "UPCOMING_VACCINATIONS"
 			FetchVaccinationDetails.new.upcoming(id)
 		when "PREVIOUS_VACCATIONS"
-			puts "Previous vaccination"
 			FetchVaccinationDetails.new.previous(id)
 		when "PROFILE"
-			puts "inside profile postback"
 			ProfileEditor.new.get_parent_profile(id)
 		when "SUBSCRIPTION"
 			SubscriptionClass.new.subscriptions(id)
