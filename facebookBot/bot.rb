@@ -51,6 +51,12 @@ class MessengerBot
 									}
 							}
 	 	response = HTTParty.post(FB_MESSAGE, headers: HEADER, body: message_options.to_json)
+	 	Bot.on :message do |message|
+		puts "inside bot.on message in quick_replies"
+		id = message.sender["id"]
+		get_profile(id)
+		call_message(id,message.text)
+	end
 	 end
 
 	def self.typing_on(id)
@@ -105,6 +111,7 @@ class MessengerBot
 				puts "#{kid_gender}"
 				VaccinationScheduleEditor.new.add_new_kid(id,kid_name,kid_gender,kid_dob)
 				say(id,"Thanks for registering your kid details. We will notify you before the vaccination days.")
+				send_quick_reply(id)
 			end
 		end
 	end
@@ -115,6 +122,7 @@ class MessengerBot
 		Bot.on :message do |message|
 			user.update_attributes(:kid_name => message.text)
 			say(id,"Done, We updated your Kid Name!")
+			send_quick_reply(id)
 		end
 	end
 
@@ -134,6 +142,7 @@ class MessengerBot
 			if kid_gender !=nil then
 				user.update_attributes(:kid_gender => kid_gender)
 				say(id,"Done, We edited your Kid Gender!")
+				send_quick_reply(id)
 			end
 		end
 	end
@@ -154,8 +163,15 @@ class MessengerBot
 				user.update_attributes(:kid_dob => kid_dob)
 				VaccinationScheduleEditor.new.update_kid_record(id,dob)
 				say(id,"Done, We edited your Kid Date Of Birth!")
+				send_quick_reply(id)
 			end
 		end
+	end
+
+	def old_user(id)
+		MessengerBot.say(id,"You can edit your previous records, or continue with the same")
+		ProfileEditor.new.get_parent_profile(id)
+		MessengerBot.send_quick_reply(id)
 	end
 
 
@@ -182,10 +198,13 @@ class MessengerBot
 	def self.call_message(id,message_text)
 		typing_on(id)
 		case message_text.downcase
-		when "upcoming"
+		when "hi"
+			say(id,"Hi #{@first_name} #{@last_name} glad to see you!")
+			send_quick_reply(id)
+		when "upcoming vaccines"
 			puts "UPCOMING_VACCINATIONS"
 			FetchVaccinationDetails.new.upcoming(id)
-		when "previous"
+		when "previous vaccine"
 			puts "Previous vaccinations"
 			FetchVaccinationDetails.new.previous(id)
 		when "profile"
@@ -209,7 +228,12 @@ class MessengerBot
 		when "GET_STARTED"
 			get_profile(id)
 			say(id,"Hey #{@first_name} #{@last_name}! Glad to have you on board. I will keep reminding you about the vaccination days for your kids.")
-			initial_config(id)
+			user = VaccinationSchedule.find_by_parent_facebook_userid(id)
+			if user == nil then
+				initial_config(id) 
+			else
+				MessengerBot.new.old_user(id)
+			end
 		when "UPCOMING_VACCINATIONS"
 			FetchVaccinationDetails.new.upcoming(id)
 		when "PREVIOUS_VACCATIONS"
