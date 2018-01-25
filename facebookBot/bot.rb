@@ -204,7 +204,7 @@ class MessengerBot
 		when "upcoming vaccines"
 			puts "UPCOMING_VACCINATIONS"
 			FetchVaccinationDetails.new.upcoming(id)
-		when "previous vaccine"
+		when "previous vaccines"
 			puts "Previous vaccinations"
 			FetchVaccinationDetails.new.previous(id)
 		when "profile"
@@ -236,7 +236,7 @@ class MessengerBot
 			end
 		when "UPCOMING_VACCINATIONS"
 			FetchVaccinationDetails.new.upcoming(id)
-		when "PREVIOUS_VACCATIONS"
+		when "PREVIOUS_VACCINATIONS"
 			FetchVaccinationDetails.new.previous(id)
 		when "PROFILE"
 			ProfileEditor.new.get_parent_profile(id)

@@ -12,7 +12,7 @@ class MessengerBot
           {
             "title": "Previous Vaccination Details",
             "type": "postback",
-            "payload": "PREVIOUS_VACCATIONS"
+            "payload": "PREVIOUS_VACCINATIONS"
           },
           {
             "title": "More",

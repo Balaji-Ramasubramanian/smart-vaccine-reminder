@@ -7,7 +7,7 @@ class MessengerBot
                   },
                   {
                     "content_type": 'text',
-                    "title": 'Provided Vaccines',
+                    "title": 'Previous Vaccines',
                     "payload": 'PROVIDED_VACCINES'
                   },
                   {
