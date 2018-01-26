@@ -1,3 +1,4 @@
+#Database table to store the vaccination schedule
 class CreateVaccinationSchedule < ActiveRecord::Migration[5.1]
    def up
   	create_table :vaccination_schedules do |t|

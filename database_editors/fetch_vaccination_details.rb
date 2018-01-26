@@ -29,14 +29,12 @@ class FetchVaccinationDetails
 		MessengerBot.new.display_vaccination_dates(id,upcoming_vaccine)
 
 		Bot.on :message do |message|
-			puts "inside bot.on message -> FetchVaccinationDetails"
 			id = message.sender["id"]
 			MessengerBot.call_message(id,message.text)
 		end
 
 		Bot.on :postback do |postback|
 			id = postback.sender["id"]
-			puts "inside postback bot.on -> FetchVaccinationDetails"
 			MessengerBot.call_postback(id,postback.payload)
 		end
 	end
@@ -62,14 +60,12 @@ class FetchVaccinationDetails
 		MessengerBot.new.display_vaccination_dates(id,previous_vaccine)
 
 		Bot.on :message do |message|
-			puts "inside bot.on message -> FetchVaccinationDetails"
 			id = message.sender["id"]
 			MessengerBot.call_message(id,message.text)
 		end
 
 		Bot.on :postback do |postback|
 			id = postback.sender["id"]
-			puts "inside postback bot.on -> FetchVaccinationDetails"
 			MessengerBot.call_postback(id,postback.payload)
 		end
 	end

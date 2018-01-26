@@ -15,12 +15,11 @@ require_relative 'json_templates/get_started.rb'
 require_relative 'json_templates/template.rb'
 require_relative 'json_templates/quick_replies.rb'
 require_relative '../subscription/subs.rb'
-# require_relative '../wit/get_wit_message.rb'
 include Facebook::Messenger
 
 class MessengerBot
 
-
+	#Method to get user Facebook profile details
 	def self.get_profile(id)
  		fb_profile_url = FB_PROFILE + id + FB_PROFILE_FIELDS
  		profile_details = HTTParty.get(fb_profile_url)
@@ -32,17 +31,17 @@ class MessengerBot
  		return profile_details
  	end
 
-
+ 	#Method to push a message to Facebook
 	def self.say(recipient_id, text)
-	  message_options = {
-	  messaging_type: "RESPONSE",
-	  recipient: { id: recipient_id },
-	  message: { text: text }
-	  }
-	  HTTParty.post(FB_MESSAGE, headers: HEADER, body: message_options)
+		message_options = {
+			messaging_type: "RESPONSE",
+			recipient: { id: recipient_id },
+			message: { text: text }
+		}
+		HTTParty.post(FB_MESSAGE, headers: HEADER, body: message_options)
 	end
 
-
+	#To send a quick reply to user
 	def self.send_quick_reply(id)
 		message_options = { messaging_type: "RESPONSE",
 							recipient: { id: id},
@@ -51,37 +50,38 @@ class MessengerBot
 									}
 							}
 	 	response = HTTParty.post(FB_MESSAGE, headers: HEADER, body: message_options.to_json)
+
 	 	Bot.on :message do |message|
-			puts "inside bot.on message in quick_replies"
 			id = message.sender["id"]
 			call_message(id,message.text)
 		end
+
 		Bot.on :postback do |postback|
 			id = postback.sender["id"]
-			puts "inside postback bot.on in quick_replies"
 			call_postback(id,postback.payload)
 		end
 	 end
 
+	#Typing indication:
 	def self.typing_on(id)
 		message_options = {
 			messaging_type: "RESPONSE",
 			recipient: { id: id },
 			sender_action: "typing_on",
 		}
-		response = HTTParty.post(FB_MESSAGE,headers: HEADER, body: message_options.to_json)
-  		
+		response = HTTParty.post(FB_MESSAGE,headers: HEADER, body: message_options.to_json)		
   	end
 
+  	#Initial configuration method to get kid name 
   	def self.initial_config(id)
 		say(id,"Tell me your your kid name")
 		Bot.on :message do |message|
 			kid_name = message.text
-			puts "Your kid name is #{kid_name}"
 			get_dob(id,kid_name)
 		end
 	end
 
+	#Initial configuration method to get kid Date of birth
 	def self.get_dob(id,kid_name)
 		say(id,"What is #{kid_name}'s date of birth?")
 		Bot.on :message do |message|
@@ -93,12 +93,13 @@ class MessengerBot
 				get_dob(id,kid_name)
 			end
 			if dob !=nil then
-				say(id,"Got it, #{dob} right?")
+				say(id,"Got it, #{dob}")
 				get_gender(id,kid_name,dob)
 			end
 		end
 	end
 
+	#Initial configuration method to get kid Gender
 	def self.get_gender(id,kid_name,kid_dob)
 		say(id,"Boy or girl child?")
 		Bot.on :message do |message|
@@ -112,7 +113,6 @@ class MessengerBot
 			end
 
 			if kid_gender !=nil then
-				puts "#{kid_gender}"
 				VaccinationScheduleEditor.new.add_new_kid(id,kid_name,kid_gender,kid_dob)
 				say(id,"Thanks for registering your kid details. We will notify you before the vaccination days.")
 				send_quick_reply(id)
@@ -120,6 +120,7 @@ class MessengerBot
 		end
 	end
 
+	#Method to edit kid name in the database
 	def self.edit_kid_name(id)
 		user = VaccinationSchedule.find_by_parent_facebook_userid(id)
 		say(id,"Tell me your Kid Name")
@@ -130,6 +131,7 @@ class MessengerBot
 		end
 	end
 
+	#Method to edit kid gender in the database
 	def self.edit_kid_gender(id)
 		user = VaccinationSchedule.find_by_parent_facebook_userid(id)
 		say(id,"Male or Female kid?")
@@ -151,6 +153,7 @@ class MessengerBot
 		end
 	end
 
+	#Method to edit kid date of birth in the database
 	def self.edit_kid_dob(id)
 		user = VaccinationSchedule.find_by_parent_facebook_userid(id)
 		say(id,"What is #{user.kid_name}'s date of birth?")
@@ -172,33 +175,31 @@ class MessengerBot
 		end
 	end
 
+	#Method used to retrive the user profile when rejoin to the bot
 	def old_user(id)
 		MessengerBot.say(id,"You can edit your previous records, or continue with the same")
 		ProfileEditor.new.get_parent_profile(id)
 		MessengerBot.send_quick_reply(id)
 	end
 
-
+	#Initial configuration for the bot 
 	Facebook::Messenger::Subscriptions.subscribe(access_token: ENV["ACCESS_TOKEN"])
 	greeting_response 		 =HTTParty.post(FB_PAGE,  headers: HEADER, body: GREETING.to_json )
 	get_started_response	 =HTTParty.post(FB_PAGE,  headers: HEADER, body: GET_STARTED.to_json)
 	persistent_menu_response =HTTParty.post(FB_PAGE, headers: HEADER, body: PERSISTENT_MENU.to_json)
 
 	Bot.on :message do |message|
-		puts "inside bot.on message"
 		id = message.sender["id"]
-		# get_profile(id)
 		call_message(id,message.text)
 	end
 
 
 	Bot.on :postback do |postback|
 		id = postback.sender["id"]
-		puts "inside postback bot.on"
 		call_postback(id,postback.payload)
 	end
 
-
+	#Method to handle bot messages
 	def self.call_message(id,message_text)
 		typing_on(id)
 		get_profile(id)
@@ -207,13 +208,10 @@ class MessengerBot
 			say(id,"Hi #{@first_name} #{@last_name} glad to see you!")
 			send_quick_reply(id)
 		when "upcoming vaccines"
-			puts "UPCOMING_VACCINATIONS"
 			FetchVaccinationDetails.new.upcoming(id)
 		when "previous vaccines"
-			puts "Previous vaccinations"
 			FetchVaccinationDetails.new.previous(id)
 		when "profile"
-			puts "inside profile message"
 			ProfileEditor.new.get_parent_profile(id)
 		when "edit kid name"
 			MessengerBot.edit_kid_name(id)
@@ -227,7 +225,7 @@ class MessengerBot
 		end
 	end
 
-
+	#Method to handle postbacks
 	def self.call_postback(id,postback_payload)
 		puts postback_payload
 		typing_on(id)

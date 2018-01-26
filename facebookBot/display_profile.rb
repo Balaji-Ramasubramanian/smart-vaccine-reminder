@@ -8,8 +8,8 @@ require_relative '../utils'
 
 class MessengerBot
 
+	#Method to display user profile details
 	def display_profile(id,parent_first_name,parent_last_name,kid_name,kid_dob,kid_gender)
-		puts "Inside display_profile"
 		template = TEMPLATE_BODY
 		elements = []
 		new_element = {
@@ -40,21 +40,19 @@ class MessengerBot
 		    "recipient": { "id": "#{id}"},
 		    "message": "#{template.to_json}"
         }
-        # puts message_options
 		res = HTTParty.post(FB_MESSAGE, headers: HEADER, body: message_options)
 
-	Bot.on :message do |message|
-		puts "inside bot.on message -> display_profile"
-		id = message.sender["id"]
-		MessengerBot.call_message(id,message.text)
-	end
+		Bot.on :message do |message|
+			id = message.sender["id"]
+			MessengerBot.call_message(id,message.text)
+		end
 
 
-	Bot.on :postback do |postback|
-		id = postback.sender["id"]
-		puts "inside postback bot.on -> display_profile"
-		MessengerBot.call_postback(id,postback.payload)
-	end
+		Bot.on :postback do |postback|
+			id = postback.sender["id"]
+			MessengerBot.call_postback(id,postback.payload)
+		end
 
 	end
+	
 end
