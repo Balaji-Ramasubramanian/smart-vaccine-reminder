@@ -179,6 +179,7 @@ class MessengerBot
 	greeting_response 		 =HTTParty.post(FB_PAGE,  headers: HEADER, body: GREETING.to_json )
 	get_started_response	 =HTTParty.post(FB_PAGE,  headers: HEADER, body: GET_STARTED.to_json)
 	persistent_menu_response =HTTParty.post(FB_PAGE, headers: HEADER, body: PERSISTENT_MENU.to_json)
+	puts "Starting bot .. #{persistent_menu_response}"
 
 	Bot.on :message do |message|
 		puts "inside bot.on message"
@@ -218,11 +219,13 @@ class MessengerBot
 			MessengerBot.edit_kid_gender(id)
 		else
 			say(id,"sorry ")
+			send_quick_reply(id)
 		end
 	end
 
 
 	def self.call_postback(id,postback_payload)
+		puts postback_payload
 		typing_on(id)
 		case postback_payload
 		when "GET_STARTED"
@@ -260,7 +263,6 @@ class MessengerBot
 			send_quick_reply(id)
 		end
 	end
-
 
 
 end

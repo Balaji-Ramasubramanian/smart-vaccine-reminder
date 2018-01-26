@@ -5,7 +5,7 @@ class MessengerBot
         "locale": "default",
         "call_to_actions": [
           {
-            "title": "Upcoming Vaccination Days",
+            "title": "Upcoming Vaccination Details",
             "type": "postback",
             "payload": "UPCOMING_VACCINATIONS"
           },
