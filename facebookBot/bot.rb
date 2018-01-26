@@ -54,8 +54,12 @@ class MessengerBot
 	 	Bot.on :message do |message|
 			puts "inside bot.on message in quick_replies"
 			id = message.sender["id"]
-			# get_profile(id)
 			call_message(id,message.text)
+		end
+		Bot.on :postback do |postback|
+			id = postback.sender["id"]
+			puts "inside postback bot.on in quick_replies"
+			call_postback(id,postback.payload)
 		end
 	 end
 
