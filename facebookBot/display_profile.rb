@@ -42,6 +42,19 @@ class MessengerBot
         }
         # puts message_options
 		res = HTTParty.post(FB_MESSAGE, headers: HEADER, body: message_options)
+
+	Bot.on :message do |message|
+		puts "inside bot.on message -> display_profile"
+		id = message.sender["id"]
+		MessengerBot.call_message(id,message.text)
 	end
 
+
+	Bot.on :postback do |postback|
+		id = postback.sender["id"]
+		puts "inside postback bot.on -> display_profile"
+		MessengerBot.call_postback(id,postback.payload)
+	end
+
+	end
 end

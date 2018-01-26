@@ -23,8 +23,8 @@ class VaccinationScheduleEditor
 	# to get the details from facebook:
 		get_profile(id)
 	# create database instance:
-		@m = VaccinationSchedule.find_by_parent_facebook_userid(id)
-    	if (@m == nil) then
+		user = VaccinationSchedule.find_by_parent_facebook_userid(id)
+    	if (user == nil) then
     		puts "inside add_new_kid  ->if"
 			t = VaccinationSchedule.new
 		# update table columns with facebook profile details:

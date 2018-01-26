@@ -17,6 +17,19 @@ class ProfileEditor
 		kid_dob = user.kid_dob
 		kid_gender = user.kid_gender
 		MessengerBot.new.display_profile(id,parent_first_name,parent_last_name,kid_name,kid_dob,kid_gender)
+		
+		Bot.on :message do |message|
+			puts "inside bot.on message -> get_parent_profile"
+			id = message.sender["id"]
+			MessengerBot.call_message(id,message.text)
+		end
+
+
+		Bot.on :postback do |postback|
+			id = postback.sender["id"]
+			puts "inside postback bot.on -> get_parent_profile"
+			MessengerBot.call_postback(id,postback.payload)
+		end
 	end
 
 end

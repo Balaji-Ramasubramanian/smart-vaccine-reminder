@@ -52,11 +52,11 @@ class MessengerBot
 							}
 	 	response = HTTParty.post(FB_MESSAGE, headers: HEADER, body: message_options.to_json)
 	 	Bot.on :message do |message|
-		puts "inside bot.on message in quick_replies"
-		id = message.sender["id"]
-		get_profile(id)
-		call_message(id,message.text)
-	end
+			puts "inside bot.on message in quick_replies"
+			id = message.sender["id"]
+			# get_profile(id)
+			call_message(id,message.text)
+		end
 	 end
 
 	def self.typing_on(id)
@@ -179,12 +179,11 @@ class MessengerBot
 	greeting_response 		 =HTTParty.post(FB_PAGE,  headers: HEADER, body: GREETING.to_json )
 	get_started_response	 =HTTParty.post(FB_PAGE,  headers: HEADER, body: GET_STARTED.to_json)
 	persistent_menu_response =HTTParty.post(FB_PAGE, headers: HEADER, body: PERSISTENT_MENU.to_json)
-	puts "Starting bot .. #{persistent_menu_response}"
 
 	Bot.on :message do |message|
 		puts "inside bot.on message"
 		id = message.sender["id"]
-		get_profile(id)
+		# get_profile(id)
 		call_message(id,message.text)
 	end
 
@@ -198,6 +197,7 @@ class MessengerBot
 
 	def self.call_message(id,message_text)
 		typing_on(id)
+		get_profile(id)
 		case message_text.downcase
 		when "hi"
 			say(id,"Hi #{@first_name} #{@last_name} glad to see you!")
@@ -218,7 +218,7 @@ class MessengerBot
 		when "edit kid gender"
 			MessengerBot.edit_kid_gender(id)
 		else
-			say(id,"sorry ")
+			say(id,"Sorry couldn't understand that.. ")
 			send_quick_reply(id)
 		end
 	end
@@ -259,7 +259,7 @@ class MessengerBot
 			say(id,"Hi #{@first_name} #{@last_name} glad to see you!")
 			send_quick_reply(id)
 		else
-			say(id, "sorry")
+			say(id, "sorry couldn't understand that..")
 			send_quick_reply(id)
 		end
 	end

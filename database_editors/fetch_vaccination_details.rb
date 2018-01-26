@@ -1,5 +1,6 @@
 require 'date'
 require 'sinatra/activerecord'
+require 'facebook/messenger'
 
 require_relative '../facebookBot/display_vaccination_dates'
 require './models/default_vaccine_schedule'
@@ -30,6 +31,19 @@ class FetchVaccinationDetails
 		end
 		puts upcoming_vaccine
 		MessengerBot.new.display_vaccination_dates(id,upcoming_vaccine)
+
+		Bot.on :message do |message|
+			puts "inside bot.on message -> FetchVaccinationDetails"
+			id = message.sender["id"]
+			MessengerBot.call_message(id,message.text)
+		end
+
+
+		Bot.on :postback do |postback|
+			id = postback.sender["id"]
+			puts "inside postback bot.on -> FetchVaccinationDetails"
+			MessengerBot.call_postback(id,postback.payload)
+		end
 	end
 
 	def previous(id)
@@ -55,6 +69,19 @@ class FetchVaccinationDetails
 		end
 		puts previous_vaccine
 		MessengerBot.new.display_vaccination_dates(id,previous_vaccine)
-	end
 
+		Bot.on :message do |message|
+			puts "inside bot.on message -> FetchVaccinationDetails"
+			id = message.sender["id"]
+			MessengerBot.call_message(id,message.text)
+		end
+
+
+		Bot.on :postback do |postback|
+			id = postback.sender["id"]
+			puts "inside postback bot.on -> FetchVaccinationDetails"
+			MessengerBot.call_postback(id,postback.payload)
+		end
+	end
+		
 end

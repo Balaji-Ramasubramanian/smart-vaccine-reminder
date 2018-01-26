@@ -13,7 +13,7 @@ require_relative "./models/vaccination_schedule.rb"
 
 task :remainder_display do
 	VACCINE_COLUMNS_INDEX_STARTS_AT =10
-	today = Date.parse("08-09-2017")
+	today = Date.today
 	columns = VaccinationSchedule.column_names
 	for i in VACCINE_COLUMNS_INDEX_STARTS_AT..columns.length-1 
 	 	users = VaccinationSchedule.select("parent_facebook_userid,parent_first_name,kid_name,#{columns[i]}").where("#{columns[i]} = ? AND subs = ?",today, true).to_a
