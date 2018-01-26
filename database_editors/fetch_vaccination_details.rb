@@ -9,18 +9,16 @@ require './models/vaccination_schedule'
 class FetchVaccinationDetails
 	VACCINE_COLUMNS_INDEX_STARTS_AT = 10
 	def upcoming(id)
-		 columns = VaccinationSchedule.column_names
-		 # puts columns	 
-		 today = Date.today
-		 upcoming_vaccine = []
-		 for i in VACCINE_COLUMNS_INDEX_STARTS_AT..columns.length-1 
+		columns = VaccinationSchedule.column_names 
+		today = Date.today
+		upcoming_vaccine = []
+		for i in VACCINE_COLUMNS_INDEX_STARTS_AT..columns.length-1 
+
 			user = VaccinationSchedule.select("#{columns[i]}").where("#{columns[i]} > ? AND parent_facebook_userid = ?",today,id).to_a
 			default_record = DefaultVaccineSchedule.where("vaccine_name = ?",columns[i])
 			if user.any? then
-				# puts columns[i]
 				new_vaccine_date = user[0]["#{columns[i]}"]
 				vaccine_url 	 = default_record[0]["url"]
-				# puts new_vaccine_date
 				new_vaccine ={
 					"vaccine": "#{columns[i]}",
 					"date": "#{new_vaccine_date}",
@@ -47,18 +45,15 @@ class FetchVaccinationDetails
 	end
 
 	def previous(id)
-		columns = VaccinationSchedule.column_names
-		# puts columns	 
+		columns = VaccinationSchedule.column_names 
 		today = Date.today
 		previous_vaccine = []
 		for i in VACCINE_COLUMNS_INDEX_STARTS_AT..columns.length-1 
 			user = VaccinationSchedule.select("#{columns[i]}").where("#{columns[i]} < ? AND parent_facebook_userid = ?",today,id).to_a
 			default_record = DefaultVaccineSchedule.where("vaccine_name = ?",columns[i])
 			if user.any? then
-				# puts columns[i]
 				new_vaccine_date = user[0]["#{columns[i]}"]
 				vaccine_url 	 = default_record[0]["url"]
-				# puts new_vaccine_date
 				new_vaccine ={
 					"vaccine": "#{columns[i]}",
 					"date": "#{new_vaccine_date}",
