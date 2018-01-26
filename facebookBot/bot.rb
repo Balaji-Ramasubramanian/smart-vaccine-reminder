@@ -241,9 +241,9 @@ class MessengerBot
 			else
 				MessengerBot.new.old_user(id)
 			end
-		when "UPCOMING_VACCINATIONS"
-			FetchVaccinationDetails.new.upcoming(id)
 		when "PREVIOUS_VACCINATIONS"
+			FetchVaccinationDetails.new.upcoming(id)
+		when "UPCOMING_VACCINATIONS"
 			FetchVaccinationDetails.new.previous(id)
 		when "PROFILE"
 			ProfileEditor.new.get_parent_profile(id)
