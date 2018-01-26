@@ -46,7 +46,7 @@ class MessengerBot
 	def self.send_quick_reply(id)
 		message_options = { messaging_type: "RESPONSE",
 							recipient: { id: id},
-							message: { text: "Choose a Topic!",
+							message: { text: "How can I help you?",
 							quick_replies: QUICK_REPLIES 
 									}
 							}
@@ -238,10 +238,8 @@ class MessengerBot
 				MessengerBot.new.old_user(id)
 			end
 		when "UPCOMING_VACCINATIONS"
-			puts "im in upcoming vaccination postback"
 			FetchVaccinationDetails.new.upcoming(id)
 		when "PREVIOUS_VACCINATIONS"
-			puts "im in upcoming vaccination postback"
 			FetchVaccinationDetails.new.previous(id)
 		when "PROFILE"
 			ProfileEditor.new.get_parent_profile(id)
