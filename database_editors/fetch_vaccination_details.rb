@@ -9,7 +9,6 @@ require './models/vaccination_schedule'
 class FetchVaccinationDetails
 	VACCINE_COLUMNS_INDEX_STARTS_AT = 10
 	def upcoming(id)
-		puts "inside upcoming_vaccine FetchVaccinationDetails"
 		columns = VaccinationSchedule.column_names 
 		today = Date.today
 		upcoming_vaccine = []
@@ -27,7 +26,6 @@ class FetchVaccinationDetails
 				upcoming_vaccine << new_vaccine
 			end
 		end
-		puts upcoming_vaccine
 		MessengerBot.new.display_vaccination_dates(id,upcoming_vaccine)
 
 		Bot.on :message do |message|
@@ -35,7 +33,6 @@ class FetchVaccinationDetails
 			id = message.sender["id"]
 			MessengerBot.call_message(id,message.text)
 		end
-
 
 		Bot.on :postback do |postback|
 			id = postback.sender["id"]
@@ -62,7 +59,6 @@ class FetchVaccinationDetails
 				previous_vaccine.insert(0,new_vaccine)
 			end
 		end
-		puts previous_vaccine
 		MessengerBot.new.display_vaccination_dates(id,previous_vaccine)
 
 		Bot.on :message do |message|
@@ -70,7 +66,6 @@ class FetchVaccinationDetails
 			id = message.sender["id"]
 			MessengerBot.call_message(id,message.text)
 		end
-
 
 		Bot.on :postback do |postback|
 			id = postback.sender["id"]

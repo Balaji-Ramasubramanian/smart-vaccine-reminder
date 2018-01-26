@@ -9,9 +9,11 @@ require_relative '../utils'
 class MessengerBot
 
 	def display_vaccination_dates(id,vaccination_dates)
-		puts "Inside display_vaccination_dates"
 		template = TEMPLATE_BODY
 		elements = []
+		if vaccination_dates.length == 0 then
+			MessengerBot.say(id,"No upcoming vaccines available")
+		end
 		for i in 0..9
 			break if i > vaccination_dates.length-1
 			vaccine_name = vaccination_dates[i][:vaccine]
@@ -36,7 +38,6 @@ class MessengerBot
 		    "recipient": { "id": "#{id}"},
 		    "message": "#{template.to_json}"
         }
-        # puts message_options
 		res = HTTParty.post(FB_MESSAGE, headers: HEADER, body: message_options)
 
 		Bot.on :message do |message|
