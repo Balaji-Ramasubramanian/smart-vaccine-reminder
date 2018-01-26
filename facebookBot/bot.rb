@@ -241,6 +241,7 @@ class MessengerBot
 			puts "im in upcoming vaccination postback"
 			FetchVaccinationDetails.new.upcoming(id)
 		when "PREVIOUS_VACCINATIONS"
+			puts "im in upcoming vaccination postback"
 			FetchVaccinationDetails.new.previous(id)
 		when "PROFILE"
 			ProfileEditor.new.get_parent_profile(id)
