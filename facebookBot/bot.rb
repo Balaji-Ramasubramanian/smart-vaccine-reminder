@@ -238,6 +238,7 @@ class MessengerBot
 				MessengerBot.new.old_user(id)
 			end
 		when "UPCOMING_VACCINATIONS"
+			puts "im in upcoming vaccination postback"
 			FetchVaccinationDetails.new.upcoming(id)
 		when "PREVIOUS_VACCINATIONS"
 			FetchVaccinationDetails.new.previous(id)
