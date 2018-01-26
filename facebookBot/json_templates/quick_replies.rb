@@ -10,10 +10,5 @@ class MessengerBot
                     "title": 'Previous Vaccines',
                     "payload": 'PROVIDED_VACCINES'
                   },
-                  {
-                    "content_type": 'text',
-                    "title": 'Missed Vaccines',
-                    "payload": 'MISSED_VACCINES'
-                  }
     ]
 end
