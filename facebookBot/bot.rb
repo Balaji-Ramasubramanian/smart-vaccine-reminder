@@ -206,10 +206,10 @@ class MessengerBot
 		when "hi"
 			say(id,"Hi #{@first_name} #{@last_name} glad to see you!")
 			send_quick_reply(id)
-		when "previous vaccines"
+		when "upcoming vaccines"
 			puts "UPCOMING_VACCINATIONS"
 			FetchVaccinationDetails.new.upcoming(id)
-		when "upcoming vaccines"
+		when "previous vaccines"
 			puts "Previous vaccinations"
 			FetchVaccinationDetails.new.previous(id)
 		when "profile"
@@ -241,9 +241,9 @@ class MessengerBot
 			else
 				MessengerBot.new.old_user(id)
 			end
-		when "PREVIOUS_VACCINATIONS"
-			FetchVaccinationDetails.new.upcoming(id)
 		when "UPCOMING_VACCINATIONS"
+			FetchVaccinationDetails.new.upcoming(id)
+		when "PREVIOUS_VACCINATIONS"
 			FetchVaccinationDetails.new.previous(id)
 		when "PROFILE"
 			ProfileEditor.new.get_parent_profile(id)
