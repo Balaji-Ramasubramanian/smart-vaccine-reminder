@@ -1,22 +1,19 @@
 class MessengerBot 
-TEMPLATE_BODY = {
+
+  TEMPLATE_BODY = {
     "attachment": {
       "type": "template",
       "payload":{
         "template_type": "generic",
-        "elements":[
-           {
+         "elements":[{
             "title": "",
             "subtitle": "",
-             "buttons":[
-              {
-                "type": "",
-                "title": "",
-                "payload": ""
-              }              
-            ]      
-          }
-        ]
+            "buttons":[{
+              "type": "",
+              "title": "",
+              "payload": ""
+            }]      
+          }]
       }
     }
   }

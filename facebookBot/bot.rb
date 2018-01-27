@@ -43,12 +43,14 @@ class MessengerBot
 
 	#To send a quick reply to user
 	def self.send_quick_reply(id)
-		message_options = { messaging_type: "RESPONSE",
-							recipient: { id: id},
-							message: { text: "How can I help you?",
-							quick_replies: QUICK_REPLIES 
-									}
-							}
+		message_options = {
+			messaging_type: "RESPONSE",
+			recipient: { id: id},
+			message: {
+				text: "How can I help you?",
+				quick_replies: QUICK_REPLIES 
+			}
+		}
 	 	response = HTTParty.post(FB_MESSAGE, headers: HEADER, body: message_options.to_json)
 
 	 	Bot.on :message do |message|
