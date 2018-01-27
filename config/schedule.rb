@@ -20,6 +20,6 @@
 # Learn more: http://github.com/javan/whenever
 
 every 1.day :at =>"7.00am" do
-	puts "running vaccine_remainder cronjob"
-	rake "remainder_display"
+	puts "running vaccine_reminder cronjob"
+	rake "reminder_display"
 end

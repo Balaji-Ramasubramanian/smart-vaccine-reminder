@@ -22,7 +22,7 @@ class SubscriptionClass
     message_option = SUBSCRIPTION_MESSAGE_OPTION
     message_option[:recipient][:id] = id
     message_option[:message][:attachment][:payload][:elements][0][:buttons][0][:title] = "Subscribe"
-    message_option[:message][:attachment][:payload][:elements][0][:subtitle] = "You are now Unsubscribed to Vaccine Remainder. Do you want to Subscribe?"
+    message_option[:message][:attachment][:payload][:elements][0][:subtitle] = "You are now Unsubscribed to Vaccine reminder. Do you want to Subscribe?"
     message_option[:message][:attachment][:payload][:elements][0][:buttons][0][:payload] = "SUBSCRIBE"
     res = HTTParty.post(FB_MESSAGE, headers: HEADER, body: message_option.to_json)
   end
@@ -32,25 +32,25 @@ class SubscriptionClass
     message_option = SUBSCRIPTION_MESSAGE_OPTION
     message_option[:recipient][:id] = id
     message_option[:message][:attachment][:payload][:elements][0][:buttons][0][:title] = "Unsubscribe"
-    message_option[:message][:attachment][:payload][:elements][0][:subtitle] = "You are now subscribed to Vaccine Remainder. Do you want to Unsubscribe?"
+    message_option[:message][:attachment][:payload][:elements][0][:subtitle] = "You are now subscribed to Vaccine reminder. Do you want to Unsubscribe?"
     message_option[:message][:attachment][:payload][:elements][0][:buttons][0][:payload] = "UNSUBSCRIBE"
     res = HTTParty.post(FB_MESSAGE, headers: HEADER, body: message_option.to_json)
   end
 
 
-  #Add subscription for user to Vaccine Remainder
+  #Add subscription for user to Vaccine reminder
   def subscribe(id)
     user=VaccinationSchedule.find_by_parent_facebook_userid(id)
     user.update_attributes( :subs => true )
     MessengerBot.say(id,"You are successfully Subscribed!!")
-    MessengerBot.say(id,"Thank you for subscribing, I'll send you Vaccine Remainders regularly !") 
+    MessengerBot.say(id,"Thank you for subscribing, I'll send you Vaccine reminders regularly !") 
   end
 
-  #unsubscribe a User from Vaccine Remainder 
+  #unsubscribe a User from Vaccine reminder 
   def unsubscribe(id)
     user = VaccinationSchedule.find_by_parent_facebook_userid(id)
     user.update_attributes( :subs => false )
-    MessengerBot.say(id, "You are successfully Unsubscribed! To get regular vaccine remainders, do subscribe!")
+    MessengerBot.say(id, "You are successfully Unsubscribed! To get regular vaccine reminders, do subscribe!")
   end 
 
 
