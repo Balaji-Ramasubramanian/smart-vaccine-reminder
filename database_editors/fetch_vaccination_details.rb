@@ -28,7 +28,9 @@ class FetchVaccinationDetails
 				upcoming_vaccine << new_vaccine
 			end
 		end
-		MessengerBot.say(id,"Here are the list of upcoming vaccines for your kid")
+		if upcoming_vaccine.length >0 then
+			MessengerBot.say(id,"Here are the list of upcoming vaccines for your kid")
+		end
 		MessengerBot.new.display_vaccination_dates(id,upcoming_vaccine)
 
 		Bot.on :message do |message|
@@ -61,7 +63,9 @@ class FetchVaccinationDetails
 				previous_vaccine.insert(0,new_vaccine)
 			end
 		end
-		MessengerBot.say(id,"Here are the list of provided vaccines for your kid")
+		if previous_vaccine.length > 0 then
+			MessengerBot.say(id,"Here are the list of provided vaccines for your kid")
+		end
 		MessengerBot.new.display_vaccination_dates(id,previous_vaccine)
 
 		Bot.on :message do |message|
