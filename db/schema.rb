@@ -12,16 +12,13 @@
 
 ActiveRecord::Schema.define(version: 20180124144830) do
 
-  # These are extensions that must be enabled in order to support this database
-  enable_extension "plpgsql"
-
-  create_table "default_vaccine_schedules", force: :cascade do |t|
+  create_table "default_vaccine_schedules", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string "vaccine_name"
     t.integer "due_date"
     t.string "url"
   end
 
-  create_table "vaccination_schedules", force: :cascade do |t|
+  create_table "vaccination_schedules", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string "parent_facebook_userid"
     t.string "parent_first_name"
     t.string "parent_last_name"

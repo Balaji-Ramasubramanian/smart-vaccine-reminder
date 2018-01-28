@@ -27,7 +27,6 @@ GEM
     minitest (5.11.1)
     multi_xml (0.6.0)
     mustermann (1.0.1)
-    pg (0.21.0)
     rack (2.0.3)
     rack-protection (2.0.0)
       rack
@@ -61,7 +60,6 @@ DEPENDENCIES
   facebook-messenger
   httparty
   json
-  pg (~> 0.18)
   rake
   sinatra
   sinatra-activerecord

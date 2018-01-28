@@ -9,12 +9,13 @@ require_relative '../utils.rb'
 require_relative '../database_editors/vaccination_schedule_editor'
 require_relative '../database_editors/fetch_vaccination_details'
 require_relative '../database_editors/profile_editor'
+require_relative '../subscription/subs.rb'
+require_relative '../wit/get_wit_message'
 require_relative 'json_templates/greeting.rb'
 require_relative 'json_templates/persistent_menu.rb'
 require_relative 'json_templates/get_started.rb'
 require_relative 'json_templates/template.rb'
 require_relative 'json_templates/quick_replies.rb'
-require_relative '../subscription/subs.rb'
 include Facebook::Messenger
 
 class MessengerBot
@@ -91,7 +92,7 @@ class MessengerBot
 			begin
 				dob = Date.parse kid_dob
 			rescue ArgumentError
-				say(id,"Invalid Date , try DD-MM-YYYY format")
+				say(id,"Invalid Date , provide it in DD-MM-YYYY format")
 				get_dob(id,kid_name)
 			end
 			if dob !=nil then
@@ -123,14 +124,21 @@ class MessengerBot
 	end
 
 	#Method to edit kid name in the database
-	def self.edit_kid_name(id)
+	def self.edit_kid_name(id,kid_name =nil)
 		user = VaccinationSchedule.find_by_parent_facebook_userid(id)
-		say(id,"Tell me your Kid Name")
-		Bot.on :message do |message|
-			user.update_attributes(:kid_name => message.text)
-			say(id,"Done, We updated your Kid Name!")
+		if kid_name == nil then
+			say(id,"Tell me your Kid Name")
+			Bot.on :message do |message|
+				user.update_attributes(:kid_name => message.text)
+				say(id,"Done, We updated your Kid Name as #{message.text}!")
+				send_quick_reply(id)
+			end
+		else
+			user.update_attributes(:kid_name => kid_name)
+			say(id,"Done, We updated your Kid Name as #{kid_name}!")
 			send_quick_reply(id)
 		end
+
 	end
 
 	#Method to edit kid gender in the database
@@ -156,25 +164,36 @@ class MessengerBot
 	end
 
 	#Method to edit kid date of birth in the database
-	def self.edit_kid_dob(id)
+	def self.edit_kid_dob(id,dob_val = nil)
 		user = VaccinationSchedule.find_by_parent_facebook_userid(id)
-		say(id,"What is #{user.kid_name}'s date of birth?")
-		Bot.on :message do |message|
-			kid_dob = message.text
-			begin
-				dob = Date.parse kid_dob
-			rescue ArgumentError
-				say(id,"Invalid Date , try DD-MM-YYYY format")
-				edit_kid_dob(id)
+		if dob_val == nil then
+			say(id,"What is #{user.kid_name}'s date of birth?")
+			Bot.on :message do |message|
+				kid_dob = message.text
+				validate_dob(id,kid_dob)
 			end
-			if dob !=nil then
-				say(id,"Got it, #{dob} right?")
-				user.update_attributes(:kid_dob => kid_dob)
-				VaccinationScheduleEditor.new.update_kid_record(id,dob)
-				say(id,"Done, We edited your Kid Date Of Birth!")
-				send_quick_reply(id)
-			end
+		else
+			validate_dob(id,dob_val)
 		end
+
+	end
+
+	#Method to validate kid date of birth
+	def self.validate_dob(id,kid_dob)
+		user = VaccinationSchedule.find_by_parent_facebook_userid(id)
+		begin
+			dob = Date.parse kid_dob
+		rescue ArgumentError
+			say(id,"Invalid Date , provide it in DD-MM-YYYY format")
+			edit_kid_dob(id)
+		end
+		if dob !=nil then
+			say(id,"Got it, #{dob} right?")
+			user.update_attributes(:kid_dob => kid_dob)
+			VaccinationScheduleEditor.new.update_kid_record(id,dob)
+			say(id,"Done, We edited your Kid Date Of Birth!")
+			send_quick_reply(id)
+		end	
 	end
 
 	#Method used to retrive the user profile when rejoin to the bot
@@ -185,17 +204,18 @@ class MessengerBot
 	end
 
 	#Initial configuration for the bot 
-	Facebook::Messenger::Subscriptions.subscribe(access_token: ENV["ACCESS_TOKEN"])
+	Facebook::Messenger::Subscriptions.subscribe(access_token: ENV["FB_ACCESS_TOKEN"])
 	greeting_response 		 =HTTParty.post(FB_PAGE,  headers: HEADER, body: GREETING.to_json )
 	get_started_response	 =HTTParty.post(FB_PAGE,  headers: HEADER, body: GET_STARTED.to_json)
 	persistent_menu_response =HTTParty.post(FB_PAGE, headers: HEADER, body: PERSISTENT_MENU.to_json)
 
+	#Triggers whenever a message has got
 	Bot.on :message do |message|
 		id = message.sender["id"]
 		call_message(id,message.text)
 	end
 
-
+	#Triggers whenever a postback happens
 	Bot.on :postback do |postback|
 		id = postback.sender["id"]
 		call_postback(id,postback.payload)
@@ -222,14 +242,47 @@ class MessengerBot
 		when "edit kid gender"
 			MessengerBot.edit_kid_gender(id)
 		else
-			say(id,"Sorry couldn't understand that.. ")
-			send_quick_reply(id)
+			handle_wit_response(id,message_text)
 		end
+	end
+
+	#Method to handle wit response
+	def self.handle_wit_response(id,message_text)
+		wit_response =  Wit.new.get_intent(message_text)
+		if wit_response.class == String
+			MessengerBot.call_postback(id,wit_response)
+		else
+			if wit_response["gender_value"] != nil then
+				user = VaccinationSchedule.find_by_parent_facebook_userid(id)
+				if wit_response["gender_value"][0]["value"] == "MALE" then
+					user.update_attributes(:kid_gender => "male")
+					say(id,"Done, We edited your Kid Gender!")
+					send_quick_reply(id)
+				elsif wit_response["gender_value"][0]["value"] == "FEMALE" then
+					user.update_attributes(:kid_gender => "female")
+					say(id,"Done, We edited your Kid Gender!")
+					send_quick_reply(id)
+				else
+					MessengerBot.call_postback(id,wit_response["intent"][0]["value"])
+				end
+			end
+
+			if wit_response["dob_value"] !=nil then
+				user = VaccinationSchedule.find_by_parent_facebook_userid(id)
+				edit_kid_dob(id,wit_response["dob_value"][0]["value"])
+			end
+
+			if wit_response["name_value"] != nil then
+				user = VaccinationSchedule.find_by_parent_facebook_userid(id)
+				edit_kid_name(id,wit_response["name_value"][0]["value"])
+			end
+
+		end
+
 	end
 
 	#Method to handle postbacks
 	def self.call_postback(id,postback_payload)
-		puts postback_payload
 		typing_on(id)
 		case postback_payload
 		when "GET_STARTED"
@@ -263,8 +316,8 @@ class MessengerBot
 			say(id,"Hi #{@first_name} #{@last_name} glad to see you!")
 			send_quick_reply(id)
 		else
-			say(id, "sorry couldn't understand that..")
-			send_quick_reply(id)
+			say(id, "Sorry couldn't understand that.. 🙁")
+			say(id, "Try these simple commands,\n*Show my upcoming vaccines\n*what are my past vaccines?\n*change my kid name\n*show my profile")
 		end
 	end
 

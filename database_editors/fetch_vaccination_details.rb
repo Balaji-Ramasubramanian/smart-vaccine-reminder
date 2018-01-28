@@ -8,6 +8,8 @@ require './models/vaccination_schedule'
 
 class FetchVaccinationDetails
 	VACCINE_COLUMNS_INDEX_STARTS_AT = 10
+
+	#Method to fetch upcoming vaccination days from database
 	def upcoming(id)
 		columns = VaccinationSchedule.column_names 
 		today = Date.today
@@ -26,6 +28,7 @@ class FetchVaccinationDetails
 				upcoming_vaccine << new_vaccine
 			end
 		end
+		MessengerBot.say(id,"Here are the list of upcoming vaccines for your kid")
 		MessengerBot.new.display_vaccination_dates(id,upcoming_vaccine)
 
 		Bot.on :message do |message|
@@ -39,6 +42,7 @@ class FetchVaccinationDetails
 		end
 	end
 
+	#Method to fetch past vaccination dates from database
 	def previous(id)
 		columns = VaccinationSchedule.column_names 
 		today = Date.today
@@ -57,6 +61,7 @@ class FetchVaccinationDetails
 				previous_vaccine.insert(0,new_vaccine)
 			end
 		end
+		MessengerBot.say(id,"Here are the list of provided vaccines for your kid")
 		MessengerBot.new.display_vaccination_dates(id,previous_vaccine)
 
 		Bot.on :message do |message|

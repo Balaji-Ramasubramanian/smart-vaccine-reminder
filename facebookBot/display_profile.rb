@@ -13,22 +13,22 @@ class MessengerBot
 		template = TEMPLATE_BODY
 		elements = []
 		new_element = {
-	            "title": "Profile:",
+	            "title": "👤 Profile:",
 	            "subtitle": "Your Name: #{parent_first_name}\nKid Name: #{kid_name}\nDate Of Birth: #{kid_dob}\nKid Gender: #{kid_gender}",
 			    "buttons":[
 			      {
 			        "type": "postback",
-			        "title": "Edit Kid Name",
+			        "title": "👶 Edit Kid Name",
 			        "payload": "EDIT_KID_NAME"
 			      },
 			      {
 			        "type": "postback",
-			        "title": "Edit Kid DOB",
+			        "title": "📅 Edit Kid DOB",
 			        "payload": "EDIT_KID_DOB"
 			      },
 			      {
 			        "type": "postback",
-			        "title": "Edit Kid Gender",
+			        "title": "🚻 Edit Kid Gender",
 			        "payload": "EDIT_KID_GENDER"
 			      }
 			    ]

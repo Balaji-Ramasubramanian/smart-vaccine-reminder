@@ -7,14 +7,20 @@ require_relative '../models/vaccination_schedule'
 
 class SubscriptionClass
 
+  #Method to handle subscriptions
   def subscriptions(id)
     user = VaccinationSchedule.find_by_parent_facebook_userid(id)
+    if user != nil then
       subscriptions = user.subs
       if subscriptions == true then
         show_unsubscribe(id)
       else
         show_subscribe(id)
       end
+    else
+      MessengerBot.say(id,"Please register your details first!")
+      MessengerBot.initial_config(id)
+    end
   end
 
   #Show Subscription Template

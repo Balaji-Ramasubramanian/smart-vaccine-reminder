@@ -13,7 +13,7 @@ class MessengerBot
 		template = TEMPLATE_BODY
 		elements = []
 		if vaccination_dates.length == 0 then
-			MessengerBot.say(id,"No upcoming vaccines available")
+			MessengerBot.say(id,"No vaccines available")
 		end
 		for i in 0..9
 			break if i > vaccination_dates.length-1

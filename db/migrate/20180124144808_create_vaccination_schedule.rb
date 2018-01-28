@@ -3,12 +3,12 @@ class CreateVaccinationSchedule < ActiveRecord::Migration[5.1]
    def up
   	create_table :vaccination_schedules do |t|
   	# facebook profile details:
-  	    t.string 	:parent_facebook_userid
-      	t.string	:parent_first_name
-      	t.string	:parent_last_name
-      	t.string 	:parent_gender
-      	t.string 	:locale
-      	t.boolean 	:subs
+	    t.string 	:parent_facebook_userid
+    	t.string	:parent_first_name
+    	t.string	:parent_last_name
+    	t.string 	:parent_gender
+    	t.string 	:locale
+    	t.boolean 	:subs
     # kid details:
     	t.string	:kid_name
     	t.date	:kid_dob 

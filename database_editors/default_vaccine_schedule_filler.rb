@@ -2,6 +2,8 @@ require 'sinatra/activerecord'
 require './models/default_vaccine_schedule'
 require './models/vaccination_schedule'
 
+
+#Fill Default vaccination table
 t = DefaultVaccineSchedule.new
 t.vaccine_name = "bcg_dose1"
 t.due_date =0
