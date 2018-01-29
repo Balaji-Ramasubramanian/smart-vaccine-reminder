@@ -27,6 +27,7 @@ GEM
     minitest (5.11.1)
     multi_xml (0.6.0)
     mustermann (1.0.1)
+    mysql2 (0.4.10)
     rack (2.0.3)
     rack-protection (2.0.0)
       rack
@@ -60,6 +61,7 @@ DEPENDENCIES
   facebook-messenger
   httparty
   json
+  mysql2
   rake
   sinatra
   sinatra-activerecord
