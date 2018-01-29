@@ -54,6 +54,7 @@ class CreateVaccinationSchedule < ActiveRecord::Migration[5.1]
   end
   
   def down
+    # Drop vaccination_schedules table
   	drop_table :vaccination_schedules
   end
 end

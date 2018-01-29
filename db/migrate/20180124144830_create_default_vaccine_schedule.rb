@@ -9,6 +9,7 @@ class CreateDefaultVaccineSchedule < ActiveRecord::Migration[5.1]
   end
 
   def down
+  	# Drop default_vaccine_schedule table
   	drop_table :default_vaccine_schedules
   end
 
