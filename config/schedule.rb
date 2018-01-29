@@ -24,6 +24,6 @@
 # 	rake "reminder_display"
 # end
 
-every 5.minute do
+every 1.minute do
 	rake "reminder_display"
 end
