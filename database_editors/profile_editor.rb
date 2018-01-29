@@ -24,6 +24,7 @@ class ProfileEditor
 			MessengerBot.initial_config(id)
 		end
 		Bot.on :message do |message|
+			puts "inside ProfileEditor"
 			id = message.sender["id"]
 			MessengerBot.call_message(id,message.text)
 		end

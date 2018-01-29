@@ -79,6 +79,7 @@ class MessengerBot
   	#Initial configuration method to get kid name 
   	def self.initial_config(id)
 		say(id,"Tell me your your kid name")
+		kid_name=nil
 		Bot.on :message do |message|
 			kid_name = message.text
 			get_dob(id,kid_name)
@@ -212,6 +213,7 @@ class MessengerBot
 
 	#Triggers whenever a message has got
 	Bot.on :message do |message|
+		puts "inside bot.rb"
 		id = message.sender["id"]
 		call_message(id,message.text)
 	end
