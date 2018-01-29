@@ -4,6 +4,7 @@ require 'json'
 require_relative './subscription_template.rb'
 require_relative '../facebookBot/bot.rb'
 require_relative '../models/vaccination_schedule'
+require_relative '../database_editors/vaccination_schedule_editor'
 
 class SubscriptionClass
 
@@ -18,8 +19,9 @@ class SubscriptionClass
         show_subscribe(id)
       end
     else
+      VaccinationScheduleEditor.new.add_new_kid(id," ","",Date.today)
       MessengerBot.say(id,"Please register your details first!")
-      MessengerBot.initial_config(id)
+      # MessengerBot.initial_config(id)
     end
   end
 

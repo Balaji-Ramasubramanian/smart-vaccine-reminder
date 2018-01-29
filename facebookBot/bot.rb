@@ -189,7 +189,7 @@ class MessengerBot
 			edit_kid_dob(id)
 		end
 		if dob !=nil then
-			say(id,"Got it, #{dob} right?")
+			say(id,"Got it, #{dob}")
 			user.update_attributes(:kid_dob => kid_dob)
 			VaccinationScheduleEditor.new.update_kid_record(id,dob)
 			say(id,"Done, We edited your Kid Date Of Birth!")
