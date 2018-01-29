@@ -19,7 +19,7 @@
 
 # Learn more: http://github.com/javan/whenever
 
-every 1.day :at =>"9.45pm" do
+every 1.day :at =>"10:00 pm" do
 	puts "running vaccine_reminder cronjob"
 	rake "reminder_display"
 end
