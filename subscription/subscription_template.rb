@@ -20,7 +20,7 @@ class SubscriptionClass
                     {
                       "type": "postback",
                       "title": "Why Subscribe?",
-                      "postback": "WHY_SUBSCRIBE"
+                      "payload": "WHY_SUBSCRIBE"
                     }             
                 ]   
                 }
