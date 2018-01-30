@@ -1,4 +1,3 @@
-
 require 'facebook/messenger'
 require 'httparty'
 require 'json'
@@ -9,7 +8,6 @@ require './models/vaccination_schedule'
 require_relative '../utils.rb'
 require_relative '../database_editors/vaccination_schedule_editor'
 require_relative '../database_editors/fetch_vaccination_details'
-require_relative '../database_editors/vaccine_details'
 require_relative '../database_editors/profile_editor'
 require_relative '../subscription/subscription.rb'
 require_relative '../wit/get_wit_message'
@@ -159,7 +157,7 @@ class MessengerBot
 
 			if kid_gender !=nil then
 				user.update_attributes(:kid_gender => kid_gender)
-				say(id,"Done, We changed your Kid Gender details!")
+				say(id,"Done, We updated your kid gender details!")
 				send_quick_reply(id)
 			end
 		end
@@ -193,7 +191,7 @@ class MessengerBot
 			say(id,"Got it, #{dob}")
 			user.update_attributes(:kid_dob => kid_dob)
 			VaccinationScheduleEditor.new.update_kid_record(id,dob)
-			say(id,"Done, We changed your Kid Date Of Birth details!")
+			say(id,"Done, We updated your Kid Date Of Birth!")
 			send_quick_reply(id)
 		end	
 	end
@@ -251,6 +249,7 @@ class MessengerBot
 	#Method to handle wit response
 	def self.handle_wit_response(id,message_text)
 		wit_response =  Wit.new.get_intent(message_text)
+		puts wit_response
 		if wit_response.class == String
 			MessengerBot.call_postback(id,wit_response)
 		else
@@ -280,7 +279,7 @@ class MessengerBot
 			end
 
 			if wit_response["vaccine"] !=nil then
-				VaccineDetails.new.get_vaccine_details(id,wit_response["vaccine"]["value"])
+				VaccineDetail.new.get_vaccine_details(id,wit_response["vaccine"]["value"])
 			end
 
 		end
@@ -293,7 +292,7 @@ class MessengerBot
 		case postback_payload
 		when "GET_STARTED"
 			get_profile(id)
-			say(id,"Hey #{@first_name} #{@last_name}! Glad to have you on board. We will keep reminding you about the vaccination days for your kids.")
+			say(id,"Hey #{@first_name} #{@last_name}! Glad to have you on board. I will keep reminding you about the vaccination days for your kids.")
 			user = VaccinationSchedule.find_by_parent_facebook_userid(id)
 			if user == nil then
 				initial_config(id) 
@@ -312,6 +311,8 @@ class MessengerBot
 			SubscriptionClass.new.subscribe(id)
 		when "UNSUBSCRIBE"
 			SubscriptionClass.new.unsubscribe(id)
+		when "WHY_SUBSCRIBE"
+			say(id,"I will remind you about the vaccination days for your kid on the appropriate dates.")
 		when "EDIT_KID_NAME"
 			MessengerBot.edit_kid_name(id)
 		when "EDIT_KID_GENDER"
@@ -319,7 +320,7 @@ class MessengerBot
 		when "EDIT_KID_DOB"
 			MessengerBot.edit_kid_dob(id)
 		when "HI"
-			say(id,"Hi #{@first_name} #{@last_name}, Glad to see you!")
+			say(id,"Hi #{@first_name} #{@last_name} Glad to see you!")
 			send_quick_reply(id)
 		else
 			say(id, "Sorry I couldn't understand that.. 🙁")

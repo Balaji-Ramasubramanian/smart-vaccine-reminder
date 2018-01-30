@@ -16,5 +16,6 @@ class VaccineDetails
 			MessengerBot.display_vaccination_dates(id,vaccine)
 		end
 	end
+	
 
 end

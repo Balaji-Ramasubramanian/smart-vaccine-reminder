@@ -1,4 +1,4 @@
- require 'facebook/messenger'
+require 'facebook/messenger'
 require 'httparty'
 require 'json'
 

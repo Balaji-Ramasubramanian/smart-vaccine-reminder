@@ -28,12 +28,13 @@ class FetchVaccinationDetails
 				upcoming_vaccine << new_vaccine
 			end
 		end
-		if upcoming_vaccine.length >0 then
+		if upcoming_vaccine.length > 0 then
 			MessengerBot.say(id,"Here are the list of upcoming vaccines for your kid")
+			MessengerBot.new.display_vaccination_dates(id,upcoming_vaccine)
 		else
-			MessengerBot.say(id,"Congrats! You have successfully provided all the vaccines to your kid")
+			MessengerBot.say(id,"Congrats you have successfully provided all the vaccines to your kid!")
 		end
-		MessengerBot.new.display_vaccination_dates(id,upcoming_vaccine)
+		
 
 		Bot.on :message do |message|
 			id = message.sender["id"]
@@ -67,10 +68,11 @@ class FetchVaccinationDetails
 		end
 		if previous_vaccine.length > 0 then
 			MessengerBot.say(id,"Here are the list of provided vaccines for your kid")
+			MessengerBot.new.display_vaccination_dates(id,previous_vaccine)
 		else
-			MessengerBot.say(id,"You have provided a future date as your kid date of birth! kindly check and update it to current or previous date")
+			MessengerBot.say(id,"You have registered with future date as your kid date of birth! Please check and edit it.")
 		end
-		MessengerBot.new.display_vaccination_dates(id,previous_vaccine)
+		
 
 		Bot.on :message do |message|
 			id = message.sender["id"]
@@ -78,6 +80,7 @@ class FetchVaccinationDetails
 		end
 
 		Bot.on :postback do |postback|
+			puts "inside FetchVaccinationDetails"
 			id = postback.sender["id"]
 			MessengerBot.call_postback(id,postback.payload)
 		end
