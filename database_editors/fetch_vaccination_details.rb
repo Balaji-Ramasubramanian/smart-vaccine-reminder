@@ -21,8 +21,8 @@ class FetchVaccinationDetails
 				new_vaccine_date = user[0]["#{columns[i]}"]
 				vaccine_url 	 = default_record[0]["url"]
 				new_vaccine ={
-					"vaccine": "#{columns[i]}",
-					"date": "#{new_vaccine_date}",
+					"vaccine_name": "#{columns[i]}",
+					"due_date": "#{new_vaccine_date}",
 					"url": "#{vaccine_url}"
 				}
 				upcoming_vaccine << new_vaccine
@@ -59,8 +59,8 @@ class FetchVaccinationDetails
 				new_vaccine_date = user[0]["#{columns[i]}"]
 				vaccine_url 	 = default_record[0]["url"]
 				new_vaccine ={
-					"vaccine": "#{columns[i]}",
-					"date": "#{new_vaccine_date}",
+					"vaccine_name": "#{columns[i]}",
+					"due_date": "#{new_vaccine_date}",
 					"url": "#{vaccine_url}"
 				}
 				previous_vaccine.insert(0,new_vaccine)
@@ -80,7 +80,6 @@ class FetchVaccinationDetails
 		end
 
 		Bot.on :postback do |postback|
-			puts "inside FetchVaccinationDetails"
 			id = postback.sender["id"]
 			MessengerBot.call_postback(id,postback.payload)
 		end

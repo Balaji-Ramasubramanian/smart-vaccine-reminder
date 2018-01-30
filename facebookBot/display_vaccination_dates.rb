@@ -12,13 +12,13 @@ class MessengerBot
 	def display_vaccination_dates(id,vaccination_dates)
 		template = TEMPLATE_BODY
 		elements = []
-		if vaccination_dates.length == 0 then
-			MessengerBot.say(id,"No vaccines available")
-		end
+		# if vaccination_dates.length == 0 then
+		# 	MessengerBot.say(id,"No vaccines available")
+		# end
 		for i in 0..9
 			break if i > vaccination_dates.length-1
-			vaccine_name = vaccination_dates[i][:vaccine]
-			vaccine_date = vaccination_dates[i][:date]
+			vaccine_name = vaccination_dates[i][:vaccine_name]
+			vaccine_date = Date.parse(vaccination_dates[i][:due_date]).strftime("%d %b %Y")
 			vaccine_url  = vaccination_dates[i][:url]
 			new_element = {
 	            "title": "#{vaccine_name.upcase}",

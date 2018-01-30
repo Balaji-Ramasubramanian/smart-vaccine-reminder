@@ -15,6 +15,8 @@ class Wit
 			end
 		elsif response["entities"]["greetings"] != nil then
 			return "HI"	
+		elsif response["entities"]["vaccine"] != nil then
+			return response["entities"]
 		else 
 			return "NOTHING"
 		end

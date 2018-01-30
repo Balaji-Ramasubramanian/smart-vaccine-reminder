@@ -9,6 +9,7 @@ require_relative '../utils.rb'
 require_relative '../database_editors/vaccination_schedule_editor'
 require_relative '../database_editors/fetch_vaccination_details'
 require_relative '../database_editors/profile_editor'
+require_relative '../database_editors/vaccine_details'
 require_relative '../subscription/subscription.rb'
 require_relative '../wit/get_wit_message'
 require_relative 'json_templates/greeting.rb'
@@ -96,7 +97,8 @@ class MessengerBot
 				get_dob(id,kid_name)
 			end
 			if dob !=nil then
-				say(id,"Got it, #{dob}")
+				date_full_format = dob.strftime("%d %b %Y")
+				say(id,"Got it, #{date_full_format}")
 				get_gender(id,kid_name,dob)
 			end
 		end
@@ -130,12 +132,12 @@ class MessengerBot
 			say(id,"Tell me your Kid Name")
 			Bot.on :message do |message|
 				user.update_attributes(:kid_name => message.text)
-				say(id,"Done, We updated your Kid Name as #{message.text}!")
+				say(id,"Done, We have updated your Kid Name as #{message.text}!")
 				send_quick_reply(id)
 			end
 		else
 			user.update_attributes(:kid_name => kid_name)
-			say(id,"Done, We updated your Kid Name as #{kid_name}!")
+			say(id,"Done, We have updated your Kid Name as #{kid_name}!")
 			send_quick_reply(id)
 		end
 
@@ -157,7 +159,7 @@ class MessengerBot
 
 			if kid_gender !=nil then
 				user.update_attributes(:kid_gender => kid_gender)
-				say(id,"Done, We updated your kid gender details!")
+				say(id,"Done, We have updated your kid gender details!")
 				send_quick_reply(id)
 			end
 		end
@@ -188,10 +190,11 @@ class MessengerBot
 			edit_kid_dob(id)
 		end
 		if dob !=nil then
-			say(id,"Got it, #{dob}")
+			date_full_format = dob.strftime("%d %b %Y")
+			say(id,"Got it, #{date_full_format}")
 			user.update_attributes(:kid_dob => kid_dob)
 			VaccinationScheduleEditor.new.update_kid_record(id,dob)
-			say(id,"Done, We updated your Kid Date Of Birth!")
+			say(id,"Done, We have updated your Kid Date Of Birth!")
 			send_quick_reply(id)
 		end	
 	end
@@ -249,7 +252,6 @@ class MessengerBot
 	#Method to handle wit response
 	def self.handle_wit_response(id,message_text)
 		wit_response =  Wit.new.get_intent(message_text)
-		puts wit_response
 		if wit_response.class == String
 			MessengerBot.call_postback(id,wit_response)
 		else
@@ -257,11 +259,11 @@ class MessengerBot
 				user = VaccinationSchedule.find_by_parent_facebook_userid(id)
 				if wit_response["gender_value"][0]["value"] == "MALE" then
 					user.update_attributes(:kid_gender => "male")
-					say(id,"Done, We edited your Kid Gender!")
+					say(id,"Done, We have edited your Kid Gender!")
 					send_quick_reply(id)
 				elsif wit_response["gender_value"][0]["value"] == "FEMALE" then
 					user.update_attributes(:kid_gender => "female")
-					say(id,"Done, We edited your Kid Gender!")
+					say(id,"Done, We have edited your Kid Gender!")
 					send_quick_reply(id)
 				else
 					MessengerBot.call_postback(id,wit_response["intent"][0]["value"])
@@ -279,9 +281,8 @@ class MessengerBot
 			end
 
 			if wit_response["vaccine"] !=nil then
-				VaccineDetail.new.get_vaccine_details(id,wit_response["vaccine"]["value"])
+				VaccineDetails.new.get_vaccine_details(id,wit_response["vaccine"][0]["value"])
 			end
-
 		end
 
 	end
