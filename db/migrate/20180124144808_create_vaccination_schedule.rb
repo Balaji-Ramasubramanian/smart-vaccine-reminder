@@ -8,7 +8,7 @@ class CreateVaccinationSchedule < ActiveRecord::Migration[5.1]
     	t.string	:parent_last_name
     	t.string 	:parent_gender
     	t.string 	:locale
-    	t.boolean 	:subs
+    	t.boolean 	:subscription
     # kid details:
     	t.string	:kid_name
     	t.date	:kid_dob 

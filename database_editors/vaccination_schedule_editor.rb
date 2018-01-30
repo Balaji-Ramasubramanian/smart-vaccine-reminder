@@ -34,7 +34,7 @@ class VaccinationScheduleEditor
 			t.parent_last_name	=@last_name
 			t.parent_gender	=@gender
 			t.locale	=@locale
-			t.subs	=true
+			t.subscription	=true
 
 			# fill the kid's details
 			t.kid_name = kid_name

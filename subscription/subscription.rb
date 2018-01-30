@@ -12,7 +12,7 @@ class SubscriptionClass
   def subscriptions(id)
     user = VaccinationSchedule.find_by_parent_facebook_userid(id)
     if user != nil then
-      subscriptions = user.subs
+      subscriptions = user.subscription
       if subscriptions == true then
         show_unsubscribe(id)
       else
@@ -49,7 +49,7 @@ class SubscriptionClass
   #Add subscription for user to Vaccine reminder
   def subscribe(id)
     user=VaccinationSchedule.find_by_parent_facebook_userid(id)
-    user.update_attributes( :subs => true )
+    user.update_attributes( :subscription => true )
     MessengerBot.say(id,"You are successfully Subscribed!!")
     MessengerBot.say(id,"Thank you for subscribing, I'll send you Vaccine reminders regularly !") 
   end
@@ -57,7 +57,7 @@ class SubscriptionClass
   #unsubscribe a User from Vaccine reminder 
   def unsubscribe(id)
     user = VaccinationSchedule.find_by_parent_facebook_userid(id)
-    user.update_attributes( :subs => false )
+    user.update_attributes( :subscription => false )
     MessengerBot.say(id, "You are successfully Unsubscribed! To get regular vaccine reminders, do subscribe!")
   end 
 

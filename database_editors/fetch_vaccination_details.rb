@@ -30,6 +30,8 @@ class FetchVaccinationDetails
 		end
 		if upcoming_vaccine.length >0 then
 			MessengerBot.say(id,"Here are the list of upcoming vaccines for your kid")
+		else
+			MessengerBot.say(id,"Congrats! You have successfully provided all the vaccines to your kid")
 		end
 		MessengerBot.new.display_vaccination_dates(id,upcoming_vaccine)
 
@@ -65,6 +67,8 @@ class FetchVaccinationDetails
 		end
 		if previous_vaccine.length > 0 then
 			MessengerBot.say(id,"Here are the list of provided vaccines for your kid")
+		else
+			MessengerBot.say(id,"You have provided a future date as your kid date of birth! kindly check and update it to current or previous date")
 		end
 		MessengerBot.new.display_vaccination_dates(id,previous_vaccine)
 

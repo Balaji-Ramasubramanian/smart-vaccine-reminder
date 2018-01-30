@@ -10,7 +10,7 @@ require_relative '../utils.rb'
 require_relative '../database_editors/vaccination_schedule_editor'
 require_relative '../database_editors/fetch_vaccination_details'
 require_relative '../database_editors/profile_editor'
-require_relative '../subscription/subs.rb'
+require_relative '../subscription/subscription.rb'
 require_relative '../wit/get_wit_message'
 require_relative 'json_templates/greeting.rb'
 require_relative 'json_templates/persistent_menu.rb'
@@ -132,12 +132,12 @@ class MessengerBot
 			Bot.on :message do |message|
 				user.update_attributes(:kid_name => message.text)
 				say(id,"Done, We updated your Kid Name as #{message.text}!")
-				send_quick_reply(id)
+				# send_quick_reply(id)
 			end
 		else
 			user.update_attributes(:kid_name => kid_name)
 			say(id,"Done, We updated your Kid Name as #{kid_name}!")
-			send_quick_reply(id)
+			# send_quick_reply(id)
 		end
 
 	end
@@ -158,8 +158,8 @@ class MessengerBot
 
 			if kid_gender !=nil then
 				user.update_attributes(:kid_gender => kid_gender)
-				say(id,"Done, We edited your Kid Gender!")
-				send_quick_reply(id)
+				say(id,"Done, We changed your Kid Gender details!")
+				# send_quick_reply(id)
 			end
 		end
 	end
@@ -192,8 +192,8 @@ class MessengerBot
 			say(id,"Got it, #{dob}")
 			user.update_attributes(:kid_dob => kid_dob)
 			VaccinationScheduleEditor.new.update_kid_record(id,dob)
-			say(id,"Done, We edited your Kid Date Of Birth!")
-			send_quick_reply(id)
+			say(id,"Done, We changed your Kid Date Of Birth details!")
+			# send_quick_reply(id)
 		end	
 	end
 
@@ -288,7 +288,7 @@ class MessengerBot
 		case postback_payload
 		when "GET_STARTED"
 			get_profile(id)
-			say(id,"Hey #{@first_name} #{@last_name}! Glad to have you on board. I will keep reminding you about the vaccination days for your kids.")
+			say(id,"Hey #{@first_name} #{@last_name}! Glad to have you on board. We will keep reminding you about the vaccination days for your kids.")
 			user = VaccinationSchedule.find_by_parent_facebook_userid(id)
 			if user == nil then
 				initial_config(id) 
@@ -314,10 +314,10 @@ class MessengerBot
 		when "EDIT_KID_DOB"
 			MessengerBot.edit_kid_dob(id)
 		when "HI"
-			say(id,"Hi #{@first_name} #{@last_name} glad to see you!")
+			say(id,"Hi #{@first_name} #{@last_name}, Glad to see you!")
 			send_quick_reply(id)
 		else
-			say(id, "Sorry couldn't understand that.. 🙁")
+			say(id, "Sorry I couldn't understand that.. 🙁")
 			say(id, "Try these simple commands,\n*Show my upcoming vaccines\n*what are my past vaccines?\n*change my kid name\n*show my profile")
 		end
 	end
