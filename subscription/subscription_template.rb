@@ -16,7 +16,12 @@ class SubscriptionClass
                       "type": "postback",
                       "title": "Subscribe",
                       "payload": "SUBSCRIBE"
-                    },              
+                    }, 
+                    {
+                      "type": "web_url",
+                      "title": "Why Subscribe?",
+                      "url": "http://www.google.co.in"
+                    }             
                 ]   
                 }
               ]

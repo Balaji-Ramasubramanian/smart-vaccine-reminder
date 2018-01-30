@@ -9,6 +9,7 @@ require './models/vaccination_schedule'
 require_relative '../utils.rb'
 require_relative '../database_editors/vaccination_schedule_editor'
 require_relative '../database_editors/fetch_vaccination_details'
+require_relative '../database_editors/vaccine_details'
 require_relative '../database_editors/profile_editor'
 require_relative '../subscription/subscription.rb'
 require_relative '../wit/get_wit_message'
@@ -132,12 +133,12 @@ class MessengerBot
 			Bot.on :message do |message|
 				user.update_attributes(:kid_name => message.text)
 				say(id,"Done, We updated your Kid Name as #{message.text}!")
-				# send_quick_reply(id)
+				send_quick_reply(id)
 			end
 		else
 			user.update_attributes(:kid_name => kid_name)
 			say(id,"Done, We updated your Kid Name as #{kid_name}!")
-			# send_quick_reply(id)
+			send_quick_reply(id)
 		end
 
 	end
@@ -159,7 +160,7 @@ class MessengerBot
 			if kid_gender !=nil then
 				user.update_attributes(:kid_gender => kid_gender)
 				say(id,"Done, We changed your Kid Gender details!")
-				# send_quick_reply(id)
+				send_quick_reply(id)
 			end
 		end
 	end
@@ -193,7 +194,7 @@ class MessengerBot
 			user.update_attributes(:kid_dob => kid_dob)
 			VaccinationScheduleEditor.new.update_kid_record(id,dob)
 			say(id,"Done, We changed your Kid Date Of Birth details!")
-			# send_quick_reply(id)
+			send_quick_reply(id)
 		end	
 	end
 
@@ -276,6 +277,10 @@ class MessengerBot
 			if wit_response["name_value"] != nil then
 				user = VaccinationSchedule.find_by_parent_facebook_userid(id)
 				edit_kid_name(id,wit_response["name_value"][0]["value"])
+			end
+
+			if wit_response["vaccine"] !=nil then
+				VaccineDetails.new.get_vaccine_details(id,wit_response["vaccine"]["value"])
 			end
 
 		end
