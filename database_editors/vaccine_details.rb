@@ -17,5 +17,15 @@ class VaccineDetails
 		end
 	end
 	
+		Bot.on :message do |message|
+			id = message.sender["id"]
+			MessengerBot.call_message(id,message.text)
+		end
+
+		Bot.on :postback do |postback|
+			id = postback.sender["id"]
+			MessengerBot.call_postback(id,postback.payload)
+		end
+
 
 end
