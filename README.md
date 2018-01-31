@@ -1,29 +1,29 @@
 # smart-vaccine-reminder
-It is a Facebook Messenger Bot that helps you on reminding the vaccination days for your kids. It is in development mode.
+This project is a Facebook Messenger Bot which can be used by hospitals to remind parents about their kids vaccination days through Facebook Messenger.
+
 ## Overview
-It is a Facebook Messenger Bot that has following features, 
-- Sends reminders about the Vaccination dates for their kids
-- Helps to check the provided vaccines
-- Helps to check Vaccines to be provide in future
-- Details about each vaccines
-- Subscription 
-- Natural Language Processing support
-- Provide the data to Hospitals through Google Sheets
-- Gives the access to Edit details of a user by Google sheets and make update to Database 
+This bot has the following features, 
+- Sends reminders to parents about the vaccination dates of their kids.
+- Helps to check the provided vaccines to a kid.
+- Helps to check the vaccines to be provided in future.
+- Details about each vaccines.
+- Subscription for vaccine reminders.
+- Natural Language Processing based support to answer parent's questions about the vaccines.
+- Provide the data to hospitals through Google Sheets.
+- Gives access to hospitals for editing the details of the kids vaccination days through Google sheets and make an update to the Database.
 
 To know about [What is Facebook Messenger Bot](https://developers.facebook.com/docs/messenger-platform/getting-started/app-setup)
 
 ## Requirements
-The list of requirements to be installed,
 - Ruby
 - MySQL Database
-- Online hosting server or a webhook
+- Online hosting server
 - Wit Project(For Natural Language Processing)
 
 ## Getting Started
 First you'll need to fork and clone this repo
 
-Open Terminal. Change the current working directory to the location where you want the cloned directory to be made.
+Open Terminal. Change the current working directory to the location where you want the cloned directory to be created.
 
 ```
 git clone https://github.com/Balaji-Ramasubramanian/smart-vaccine-reminder.git
@@ -36,7 +36,7 @@ Let's get all our dependencies setup:
 ## Configuration
 You need to change the **.env** file with your appropriate access tokens. You need to provide the following details,
 - Facebook page access token
-- Verify token for your Bot
+- Verify token for your bot
 - App secret token
 - Wit access token
 - Database Host
@@ -55,7 +55,7 @@ It consists of 2 tables,
 - vaccination_schedule
 
 #### default_vaccine_schedule:
-This table consists of the vaccines and their details. It includes the following,
+This table consists the following details
 - Vaccine name.
 - Number of days after which the particular vaccine has to be given to the kid.
 - URL that has the details of that vaccine.
