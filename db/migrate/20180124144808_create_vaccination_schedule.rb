@@ -51,6 +51,7 @@ class CreateVaccinationSchedule < ActiveRecord::Migration[5.1]
       t.date :hpv_dose3  
 
   	end
+    remove_column :vaccination_schedules, :id
   end
   
   def down

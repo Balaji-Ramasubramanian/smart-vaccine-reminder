@@ -6,6 +6,7 @@ class CreateDefaultVaccineSchedule < ActiveRecord::Migration[5.1]
       t.integer :due_date
       t.string :url
   	end
+    remove_column :default_vaccine_schedules, :id
   end
 
   def down
