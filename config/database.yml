@@ -5,7 +5,7 @@ development:
   database: <%= ENV['DB_DATABASE'] %>
   username: <%= ENV['DB_USERNAME'] %>
   password: <%= ENV['DB_PASSWORD'] %>
-
+  
 production:
   adapter: mysql2
   encoding: utf8

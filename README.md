@@ -16,13 +16,14 @@ Open Terminal. Change the current working directory to the location where you wa
 git clone https://github.com/Balaji-Ramasubramanian/smart-vaccine-reminder.git
 ```
 Let's get all our dependencies setup:
-``` bundle install 
+```
+ bundle install 
 ```
 
 ## Configuration
 You need to change the **.env** file with your appropriate access tokens. You need to provide the following details,
 - Facebook page access token
-- Verify token for you Bot
+- Verify token for your Bot
 - App secret token
 - Wit access token
 - Database Host
