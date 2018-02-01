@@ -14,7 +14,7 @@ require_relative "./models/vaccination_schedule.rb"
 #Cronjob to notify the users about their kid vaccination
 task :reminder_display do
 	VACCINE_COLUMNS_INDEX_STARTS_AT =10
-	today = Date.parse("28-02-2018")
+	today = Date.today
 	columns = VaccinationSchedule.column_names
 	for i in VACCINE_COLUMNS_INDEX_STARTS_AT..columns.length-1 
 
