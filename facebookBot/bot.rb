@@ -328,6 +328,4 @@ class MessengerBot
 			say(id, "Try these simple commands,\n*Show my upcoming vaccines\n*what are my past vaccines?\n*change my kid name\n*show my profile")
 		end
 	end
-
-
 end

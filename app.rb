@@ -12,3 +12,11 @@ end
 get "/" do
   "Nothing to see here"
 end
+
+get "/terms&conditions" do
+	"Terms and conditions page here"
+end
+
+get "/privacy-policy" do
+	"Privacy Policy"
+end

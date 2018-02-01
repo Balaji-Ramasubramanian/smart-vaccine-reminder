@@ -9,7 +9,7 @@ This bot has the following features,
 - Helps to check the vaccines to be provided in future.
 - Details about each vaccine.
 - Managing subscription for the vaccine reminders.
-- Natural Language Processing based support to answer parent's questions about the vaccines.
+- It can answer parents questions about the vaccines using NLP.
 - Provide the data to hospitals through Google Sheets.
 - Gives access to hospitals for editing the details of the kid's vaccination days through Google sheets and make an update to the Database.
 
