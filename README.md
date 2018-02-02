@@ -62,7 +62,7 @@ This table consists of the following details
 - URL that has the details of that vaccine.
 
 #### vaccination_schedule
-This table contains the users and their kid details, vaccination days.
+This table contains the parents and their kid's details, vaccination days.
 
 ## Initializing default_vaccine_schedule table:
 After the migration of the database tables, you need to fill up the default_vaccine_schedule table.
@@ -94,7 +94,7 @@ I will update the instructions for deploying the app in AWS, Google Cloud and Mi
 
 ## Author 
 #### Balaji Ramasubramanian
-Backend and Bot developer
+
 If you need any help in customizing and deploying this project, mail me @ balaji030698@gmail.com
 
 ## License
