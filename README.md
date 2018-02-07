@@ -1,19 +1,19 @@
 # smart-vaccine-reminder [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
-This project is a Facebook Messenger Bot which can be used by hospitals to remind parents about their kid's vaccination days through Facebook Messenger.
+This project is a Facebook Messenger Bot which can be used by hospitals to remind parents about when their kid(s) should get vaccinated through Facebook Messenger.
 
 ## Overview
 This bot has the following features, 
-- Sends reminders to parents about the vaccination dates of their kids.
-- Helps to check the provided vaccines to a kid.
-- Helps to check the vaccines to be provided in future.
+- Sends reminders to parents about when the next vaccine is due for their kid(s)
+- Check the vaccines that have been already taken.
+- Provide information about the vaccines that should be taken in the future.
 - Details about each vaccine.
-- Managing subscription for the vaccine reminders.
-- It can answer parents questions about the vaccines using NLP.
-- Provide the data to hospitals through Google Sheets.
-- Gives access to hospitals for editing the details of the kid's vaccination days through Google sheets and make an update to the Database.
+- Managing subscription for vaccine reminders.
+- Using Natural language processing(NLP), it answers questions about vaccines.
+- Based on user consent, provide the data to hospitals using Google Sheets.
+- Hospitals can also edit the due date for vaccines through Google sheets
 
-To know [What is Facebook Messenger Bot](https://developers.facebook.com/docs/messenger-platform/getting-started/app-setup)
+Check this link to know what is facebook messenger bot and how to use it : [Click Here](https://developers.facebook.com/docs/messenger-platform/getting-started/app-setup)
 
 ## Requirements
 - Ruby
@@ -37,7 +37,7 @@ Let's get all our dependencies setup:
 ## Configuration
 You need to change the **.env** file with your appropriate access tokens, usernames, and passwords. You need to add the following details,
 - Facebook page access token
-- Verify token for your bot
+- Verify token for your Facebook app
 - App secret token
 - Wit access token
 - Database Host
@@ -56,10 +56,10 @@ It consists of 2 tables,
 - vaccination_schedule
 
 #### default_vaccine_schedule:
-This table consists of the following details
+The schema of the table is as follows,
 - Vaccine name.
-- The number of days after which the particular vaccine has to be given to the kid.
-- URL that has the details of that vaccine.
+- The next due date for the vaccine.
+- URL that has more details about that vaccine.
 
 #### vaccination_schedule
 This table contains the parents and their kid's details, vaccination days.
@@ -90,12 +90,12 @@ I will update the instructions for deploying the app in AWS, Google Cloud and Mi
 #### Simple 3 step to contribute to this repo:
 1. Fork the project.
 2. Make required changes and commit.
-3. Generate pull request. Mention all the required description regarding changes you made.
+3. Generate a pull request. Mention all the required description regarding the changes you have made.
 
 ## Author 
 #### Balaji Ramasubramanian
 
-If you need any help in customizing and deploying this project, mail me @ balaji030698@gmail.com
+If you need any help in customizing and deploying this project, email me @ balaji030698@gmail.com
 
 ## License
 Copyright 2018 Balaji Ramasubramanian

@@ -66,6 +66,16 @@ class MessengerBot
 		end
 	 end
 
+	def self.send_terms_and_condition(id)
+	 	terms_and_condition_message = TERMS_AND_CONDITION 
+			message_options = {
+			messaging_type: "RESPONSE",
+			recipient: { id: id },
+			message: terms_and_condition_message,
+		}
+		HTTParty.post(FB_MESSAGE,headers: HEADER, body: message_options.to_json)	
+	end
+
 	#Typing indication:
 	def self.typing_on(id)
 		message_options = {
@@ -294,6 +304,7 @@ class MessengerBot
 		when "GET_STARTED"
 			get_profile(id)
 			say(id,"Hey #{@first_name} #{@last_name}! Glad to have you on board. I will keep reminding you about the vaccination days for your kids.")
+			send_terms_and_condition(id)
 			user = VaccinationSchedule.find_by_parent_facebook_userid(id)
 			if user == nil then
 				initial_config(id) 

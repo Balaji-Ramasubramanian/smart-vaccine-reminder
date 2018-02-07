@@ -10,7 +10,7 @@ class MessengerBot
 
 	#Method to display user profile details
 	def display_profile(id,parent_first_name,parent_last_name,kid_name,kid_dob,kid_gender)
-		template = TEMPLATE_BODY
+		template = GENERIC_TEMPLATE_BODY
 		elements = []
 		new_element = {
 	            "title": "👤 Profile:",

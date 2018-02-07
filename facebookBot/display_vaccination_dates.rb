@@ -10,7 +10,7 @@ class MessengerBot
 
 	#Display upcoming and previous vaccination dates and their details
 	def display_vaccination_dates(id,vaccination_dates)
-		template = TEMPLATE_BODY
+		template = GENERIC_TEMPLATE_BODY
 		elements = []
 		# if vaccination_dates.length == 0 then
 		# 	MessengerBot.say(id,"No vaccines available")

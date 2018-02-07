@@ -22,7 +22,7 @@ task :reminder_display do
 	 	users = VaccinationSchedule.select("parent_facebook_userid,parent_first_name,kid_name,#{columns[i]}").where("#{columns[i]} = ? AND subscription = ?",today, true).to_a
 	 	if users.any? then
 		 	users.each do |u|
-		 		MessengerBot.say("#{u["parent_facebook_userid"]}","Hi #{u["parent_first_name"]}, You need to provide #{columns[i].upcase} to your kid #{u["kid_name"]} Today!.")
+		 		MessengerBot.say("#{u["parent_facebook_userid"]}","Hi #{u["parent_first_name"]}, You need to provide #{columns[i].upcase} to your kid #{u["kid_name"]} Today!")
 		 	end
 		end
 
@@ -30,7 +30,7 @@ task :reminder_display do
 		users = VaccinationSchedule.select("parent_facebook_userid,parent_first_name,kid_name,#{columns[i]}").where("#{columns[i]} = ? AND subscription = ?",today+1,true).to_a
 	 	if users.any? then
 		 	users.each do |u|
-		 		MessengerBot.say("#{u["parent_facebook_userid"]}", "Hi #{u["parent_first_name"]}, You need to provide #{columns[i].upcase} to your kid #{u["kid_name"]} Tomorrow!.")
+		 		MessengerBot.say("#{u["parent_facebook_userid"]}", "Hi #{u["parent_first_name"]}, You need to provide #{columns[i].upcase} to your kid #{u["kid_name"]} Tomorrow!")
 		 	end
 		end
 
@@ -38,7 +38,7 @@ task :reminder_display do
 		users = VaccinationSchedule.select("parent_facebook_userid,parent_first_name,kid_name,#{columns[i]}").where("#{columns[i]} = ? AND subscription = ?",today+3, true).to_a
 	 	if users.any? then
 		 	users.each do |u|
-		 		MessengerBot.say("#{u["parent_facebook_userid"]}" ,"Hi #{u["parent_first_name"]}, You need to provide #{columns[i].upcase} to your kid #{u["kid_name"]} on #{u["#{columns[i]}"]}!.")
+		 		MessengerBot.say("#{u["parent_facebook_userid"]}" ,"Hi #{u["parent_first_name"]}, You need to provide #{columns[i].upcase} to your kid #{u["kid_name"]} on #{u["#{columns[i]}"]}!")
 		 	end
 		end
 
