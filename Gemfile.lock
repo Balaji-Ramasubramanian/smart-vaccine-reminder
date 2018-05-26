@@ -1,0 +1,74 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    activemodel (5.1.4)
+      activesupport (= 5.1.4)
+    activerecord (5.1.4)
+      activemodel (= 5.1.4)
+      activesupport (= 5.1.4)
+      arel (~> 8.0)
+    activesupport (5.1.4)
+      concurrent-ruby (~> 1.0, >= 1.0.2)
+      i18n (~> 0.7)
+      minitest (~> 5.1)
+      tzinfo (~> 1.1)
+    arel (8.0.0)
+    chronic (0.10.2)
+    concurrent-ruby (1.0.5)
+    dotenv (2.2.1)
+    facebook-messenger (1.0.0)
+      httparty (~> 0.13, >= 0.13.7)
+      rack (>= 1.6.4)
+    httparty (0.15.6)
+      multi_xml (>= 0.5.2)
+    i18n (0.9.3)
+      concurrent-ruby (~> 1.0)
+    json (2.1.0)
+    minitest (5.11.1)
+    multi_xml (0.6.0)
+    mustermann (1.0.1)
+    mysql2 (0.4.10)
+    rack (2.0.3)
+    rack-protection (2.0.0)
+      rack
+    rake (12.3.0)
+    sinatra (2.0.0)
+      mustermann (~> 1.0)
+      rack (~> 2.0)
+      rack-protection (= 2.0.0)
+      tilt (~> 2.0)
+    sinatra-activerecord (2.0.13)
+      activerecord (>= 3.2)
+      sinatra (>= 1.0)
+    sinatra-flash (0.3.0)
+      sinatra (>= 1.0.0)
+    sinatra-redirect-with-flash (0.2.1)
+      sinatra (>= 1.0.0)
+    thread_safe (0.3.6)
+    tilt (2.0.8)
+    tzinfo (1.2.4)
+      thread_safe (~> 0.1)
+    whenever (0.10.0)
+      chronic (>= 0.6.3)
+    wit (5.0.0)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  activerecord
+  dotenv
+  facebook-messenger
+  httparty
+  json
+  mysql2
+  rake
+  sinatra
+  sinatra-activerecord
+  sinatra-flash
+  sinatra-redirect-with-flash
+  whenever
+  wit
+
+BUNDLED WITH
+   1.16.0
