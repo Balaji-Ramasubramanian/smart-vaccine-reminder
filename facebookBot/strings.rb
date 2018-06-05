@@ -42,6 +42,10 @@ class MessengerBot
 		"ta" => "மேலும்"
 	}
 
+	DETAILS_BUTTON = {
+		"en" => "Details",
+		"ta" => "விவரங்கள்"
+	}
 	HELP_TEXT = {
 		"en" => "Try these simple commands,\n*Show my upcoming vaccines\n*what are my past vaccines?\n*change my kid name\n*show my profile",
 		"ta" => "இந்த எளிய கட்டளைகளை முயற்சிக்கவும் \n * என் வரவிருக்கும் தடுப்பூசிகளை காட்டுக \n * எனது கடந்த தடுப்பூசிகள் என்ன? \n * என் குழந்தையின் பெயரை மாற்றவும் \n * என் சுயவிவரத்தைக் காட்டு"

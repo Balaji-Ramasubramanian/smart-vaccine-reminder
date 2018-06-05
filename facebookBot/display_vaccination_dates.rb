@@ -12,6 +12,7 @@ class MessengerBot
 	def display_vaccination_dates(id,vaccination_dates)
 		template = GENERIC_TEMPLATE_BODY
 		elements = []
+		@language = MessengerBot.new.get_language(id)
 		# if vaccination_dates.length == 0 then
 		# 	MessengerBot.say(id,"No vaccines available")
 		# end
@@ -26,7 +27,7 @@ class MessengerBot
 			    "buttons":[
 			      {
 			        "type": "web_url",
-			        "title": "Details",
+			        "title": DETAILS_BUTTON["#{@language}"],
 			        "url": "#{vaccine_url}"
 			      }
 			    ]
