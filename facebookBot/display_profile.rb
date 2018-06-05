@@ -3,7 +3,7 @@ require 'httparty'
 require 'json'
 
 require_relative './bot.rb'
-require_relative 'json_templates/template.rb'
+require_relative 'json_templates/template'
 require_relative '../utils'
 
 class MessengerBot
@@ -12,23 +12,24 @@ class MessengerBot
 	def display_profile(id,parent_first_name,parent_last_name,kid_name,kid_dob,kid_gender)
 		template = GENERIC_TEMPLATE_BODY
 		elements = []
+		@language = MessengerBot.new.get_language(id)
 		new_element = {
-	            "title": "👤 Profile:",
-	            "subtitle": "Your Name: #{parent_first_name}\nKid Name: #{kid_name}\nDate Of Birth: #{kid_dob}\nKid Gender: #{kid_gender}",
+	            "title": "👤 #{PROFILE_BUTTON["#{@language}"]}",
+	            "subtitle": "#{YOUR_NAME["#{@language}"]}: #{parent_first_name}\n#{YOUR_KID_NAME["#{@language}"]}: #{kid_name}\n#{KID_DOB["#{@language}"]}: #{kid_dob}\n#{KID_GENDER["#{@language}"]}: #{kid_gender}",
 			    "buttons":[
 			      {
 			        "type": "postback",
-			        "title": "👶 Edit Kid Name",
+			        "title": "👶 #{EDIT_KID_NAME_TEXT["#{@language}"]}",
 			        "payload": "EDIT_KID_NAME"
 			      },
 			      {
 			        "type": "postback",
-			        "title": "📅 Edit Kid DOB",
+			        "title": "📅 #{EDIT_KID_DOB_TEXT["#{@language}"]}",
 			        "payload": "EDIT_KID_DOB"
 			      },
 			      {
 			        "type": "postback",
-			        "title": "🚻 Edit Kid Gender",
+			        "title": "🚻 #{EDIT_KID_GENDER_TEXT["#{@language}"]}",
 			        "payload": "EDIT_KID_GENDER"
 			      }
 			    ]

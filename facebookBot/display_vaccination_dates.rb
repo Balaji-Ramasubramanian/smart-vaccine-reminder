@@ -3,7 +3,7 @@ require 'httparty'
 require 'json'
 
 require_relative './bot.rb'
-require_relative 'json_templates/template.rb'
+require_relative 'json_templates/template'
 require_relative '../utils'
 
 class MessengerBot

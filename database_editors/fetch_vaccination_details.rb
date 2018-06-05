@@ -5,12 +5,14 @@ require 'facebook/messenger'
 require_relative '../facebookBot/display_vaccination_dates'
 require './models/default_vaccine_schedule'
 require './models/vaccination_schedule'
+require_relative './db_strings'
 
 class FetchVaccinationDetails
 	VACCINE_COLUMNS_INDEX_STARTS_AT = 10
 
 	#Method to fetch upcoming vaccination days from database
 	def upcoming(id)
+		@language = MessengerBot.new.get_language(id)
 		columns = VaccinationSchedule.column_names 
 		today = Date.today
 		upcoming_vaccine = []
@@ -29,10 +31,10 @@ class FetchVaccinationDetails
 			end
 		end
 		if upcoming_vaccine.length > 0 then
-			MessengerBot.say(id,"Here are the list of upcoming vaccines for your kid")
+			MessengerBot.say(id,LIST_OF_UPCOMING_VACCINES_TEXT["#{@language}"])
 			MessengerBot.new.display_vaccination_dates(id,upcoming_vaccine)
 		else
-			MessengerBot.say(id,"Congrats you have successfully provided all the vaccines to your kid!")
+			MessengerBot.say(id,ALL_VACCINES_PROVIDED_MESSAGE_TEXT["#{@language}"])
 		end
 		
 
@@ -49,6 +51,7 @@ class FetchVaccinationDetails
 
 	#Method to fetch past vaccination dates from database
 	def previous(id)
+		@language = MessengerBot.new.get_language(id)
 		columns = VaccinationSchedule.column_names 
 		today = Date.today
 		previous_vaccine = []
@@ -67,10 +70,10 @@ class FetchVaccinationDetails
 			end
 		end
 		if previous_vaccine.length > 0 then
-			MessengerBot.say(id,"Here are the list of provided vaccines for your kid")
+			MessengerBot.say(id,LIST_OF_PROVIDED_VACCINES_TEXT["#{@language}"])
 			MessengerBot.new.display_vaccination_dates(id,previous_vaccine)
 		else
-			MessengerBot.say(id,"You have registered with future date as your kid date of birth! Please check and edit it.")
+			MessengerBot.say(id,REGISTERED_WITH_FUTURE_DATE_TEXT["#{@language}"])
 		end
 		
 

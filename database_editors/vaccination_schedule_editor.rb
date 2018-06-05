@@ -4,7 +4,7 @@ require 'sinatra/activerecord'
 require './models/default_vaccine_schedule'
 require './models/vaccination_schedule'
 require_relative '../facebookBot/bot'
-require_relative '../utils.rb'
+require_relative '../utils'
 
 class VaccinationScheduleEditor
 	  VACCINE_COLUMNS_INDEX_STARTS_AT = 10
@@ -24,6 +24,7 @@ class VaccinationScheduleEditor
 	def add_new_kid(id,kid_name,kid_gender,kid_dob)
 		#To get the details from facebook
 		get_profile(id)
+		@language = @locale[0,2]
 		#create database instance
 		user = VaccinationSchedule.find_by_parent_facebook_userid(id)
     	if (user == nil) then
@@ -45,7 +46,7 @@ class VaccinationScheduleEditor
 			# fill the vaccination dates in database
 			VaccinationScheduleEditor.new.update_kid_record(id,kid_dob)
 		else
-			MessengerBot.say(id,"You are already subscribed!")
+			MessengerBot.say(id,ALREADY_SUBSCRIBED_TEXT["#{@language}"])
 		end
 	end
 
@@ -60,7 +61,7 @@ class VaccinationScheduleEditor
 				kid_record.update_attributes("#{columns[i]}" => kid_dob + d.due_date)
 			end
 		else
-			MessengerBot.say(id,"You are not registered user!")
+			MessengerBot.say(id,NOT_REGISTER_TEXT["#{@language}"])
 		end
 
 	end
