@@ -5,23 +5,24 @@ require 'date'
 
 require './models/default_vaccine_schedule'
 require './models/vaccination_schedule'
-require_relative '../utils.rb'
+require_relative '../utils'
 require_relative '../database_editors/vaccination_schedule_editor'
 require_relative '../database_editors/fetch_vaccination_details'
 require_relative '../database_editors/profile_editor'
 require_relative '../database_editors/vaccine_details'
-require_relative '../subscription/subscription.rb'
+require_relative '../subscription/subscription'
 require_relative '../wit/get_wit_message'
-require_relative 'json_templates/greeting.rb'
-require_relative 'json_templates/persistent_menu.rb'
-require_relative 'json_templates/get_started.rb'
-require_relative 'json_templates/template.rb'
-require_relative 'json_templates/quick_replies.rb'
+require_relative 'json_templates/greeting'
+require_relative 'json_templates/persistent_menu'
+require_relative 'json_templates/get_started'
+require_relative 'json_templates/template'
+require_relative 'json_templates/quick_replies'
+require_relative 'strings'
 include Facebook::Messenger
 
 class MessengerBot
 
-	#Method to get user Facebook profile details
+	# Method to get user Facebook profile details
 	def self.get_profile(id)
  		fb_profile_url = FB_PROFILE + id + FB_PROFILE_FIELDS
  		profile_details = HTTParty.get(fb_profile_url)
@@ -33,7 +34,17 @@ class MessengerBot
  		return profile_details
  	end
 
- 	#Method to push a message to Facebook
+
+ 	# Returns language of the user
+ 	def get_language(id)
+ 		fb_profile_url = FB_PROFILE + id + FB_PROFILE_FIELDS
+ 		profile_details = HTTParty.get(fb_profile_url)
+ 		locale = profile_details["locale"]
+ 		language = locale[0,2]
+ 		return language
+ 	end
+
+ 	# Method to push a message to Facebook
 	def self.say(recipient_id, text)
 		message_options = {
 			messaging_type: "RESPONSE",
@@ -43,18 +54,19 @@ class MessengerBot
 		HTTParty.post(FB_MESSAGE, headers: HEADER, body: message_options)
 	end
 
-	#To send a quick reply to user
+	# To send a quick reply to user
 	def self.send_quick_reply(id)
+		get_profile(id)
+		@language = @locale[0,2]
 		message_options = {
 			messaging_type: "RESPONSE",
 			recipient: { id: id},
 			message: {
-				text: "How can I help you?",
-				quick_replies: QUICK_REPLIES 
+				text: QUICK_REPLY_HEADER["#{@language}"],
+				quick_replies: QUICK_REPLIES["#{@language}"] 
 			}
 		}
 	 	response = HTTParty.post(FB_MESSAGE, headers: HEADER, body: message_options.to_json)
-
 	 	Bot.on :message do |message|
 			id = message.sender["id"]
 			call_message(id,message.text)
@@ -76,7 +88,7 @@ class MessengerBot
 		HTTParty.post(FB_MESSAGE,headers: HEADER, body: message_options.to_json)	
 	end
 
-	#Typing indication:
+	# Typing indication:
 	def self.typing_on(id)
 		message_options = {
 			messaging_type: "RESPONSE",
@@ -86,35 +98,36 @@ class MessengerBot
 		response = HTTParty.post(FB_MESSAGE,headers: HEADER, body: message_options.to_json)		
   	end
 
-  	#Initial configuration method to get kid name 
+  	# Initial configuration method to get kid name 
   	def self.initial_config(id)
-		say(id,"Tell me your your kid name")
+		say(id,ASK_KID_NAME["#{@language}"])
 		Bot.on :message do |message|
 			kid_name = message.text
 			get_dob(id,kid_name)
 		end
 	end
 
-	#Initial configuration method to get kid Date of birth
+	# Initial configuration method to get kid Date of birth
 	def self.get_dob(id,kid_name)
-		say(id,"What is #{kid_name}'s date of birth?")
+		say(id,ASK_DOB_TEXT["#{@language}"])
 		Bot.on :message do |message|
 			kid_dob = message.text
 			begin
 				dob = Date.parse kid_dob
 			rescue ArgumentError
-				say(id,"Invalid Date , provide it in DD-MM-YYYY format")
+				say(id,INVALID_DOB_ERROR_TEXT["#{@language}"])
 				get_dob(id,kid_name)
 			end
 			if dob !=nil then
 				date_full_format = dob.strftime("%d %b %Y")
-				say(id,"Got it, #{date_full_format}")
+				reply_text = GOT_IT_TEXT +  "#{date_full_format}"
+				say(id,reply_text)
 				get_gender(id,kid_name,dob)
 			end
 		end
 	end
 
-	#Initial configuration method to get kid Gender
+	# Initial configuration method to get kid Gender
 	def self.get_gender(id,kid_name,kid_dob)
 		say(id,"Boy or girl child?")
 		Bot.on :message do |message|
@@ -123,37 +136,39 @@ class MessengerBot
 			elsif ((message.text).downcase == "girl" || (message.text).downcase == "female") then
 				kid_gender = "female"
 			else
-				say(id,"Please provide a valid gender!")
+				say(id,INVALID_GENDER_ERROR_TEXT["#{@language}"])
 				get_gender(id,kid_name,kid_dob)
 			end
 
 			if kid_gender !=nil then
 				VaccinationScheduleEditor.new.add_new_kid(id,kid_name,kid_gender,kid_dob)
-				say(id,"Thanks for registering your kid details. We will notify you before the vaccination days.")
+				say(id,REGISTERATION_SUCCESSFULL_TEXT["#{@language}"])
 				send_quick_reply(id)
 			end
 		end
 	end
 
-	#Method to edit kid name in the database
+	# Method to edit kid name in the database
 	def self.edit_kid_name(id,kid_name =nil)
 		user = VaccinationSchedule.find_by_parent_facebook_userid(id)
 		if kid_name == nil then
-			say(id,"Tell me your Kid Name")
+			say(id,ASK_KID_NAME["#{@language}"])
 			Bot.on :message do |message|
 				user.update_attributes(:kid_name => message.text)
-				say(id,"Done, We have updated your Kid Name as #{message.text}!")
+				reply_text = KID_NAME_UPDATED_TEXT["#{@language}"] + "#{message.text}!"
+				say(id,reply_text)
 				send_quick_reply(id)
 			end
 		else
 			user.update_attributes(:kid_name => kid_name)
-			say(id,"Done, We have updated your Kid Name as #{kid_name}!")
+			reply_text = KID_NAME_UPDATED_TEXT["#{@language}"] + "#{kid_name}"
+			say(id,reply_text)
 			send_quick_reply(id)
 		end
 
 	end
 
-	#Method to edit kid gender in the database
+	# Method to edit kid gender in the database
 	def self.edit_kid_gender(id)
 		user = VaccinationSchedule.find_by_parent_facebook_userid(id)
 		say(id,"Male or Female kid?")
@@ -163,23 +178,23 @@ class MessengerBot
 			elsif ((message.text).downcase == "girl" || (message.text).downcase == "female") then
 				kid_gender = "female"
 			else
-				say(id,"Please provide a valid gender!")
+				say(id,INVALID_GENDER_ERROR_TEXT["#{@language}"])
 				edit_kid_gender(id,)
 			end
 
 			if kid_gender !=nil then
 				user.update_attributes(:kid_gender => kid_gender)
-				say(id,"Done, We have updated your kid gender details!")
+				say(id,KID_GENDER_UPDATED_TEXT["#{@language}"])
 				send_quick_reply(id)
 			end
 		end
 	end
 
-	#Method to edit kid date of birth in the database
+	# Method to edit kid date of birth in the database
 	def self.edit_kid_dob(id,dob_val = nil)
 		user = VaccinationSchedule.find_by_parent_facebook_userid(id)
 		if dob_val == nil then
-			say(id,"What is #{user.kid_name}'s date of birth?")
+			say(id,ASK_DOB_TEXT["#{@language}"])
 			Bot.on :message do |message|
 				kid_dob = message.text
 				validate_dob(id,kid_dob)
@@ -190,13 +205,13 @@ class MessengerBot
 
 	end
 
-	#Method to validate kid date of birth
+	# Method to validate kid date of birth
 	def self.validate_dob(id,kid_dob)
 		user = VaccinationSchedule.find_by_parent_facebook_userid(id)
 		begin
 			dob = Date.parse kid_dob
 		rescue ArgumentError
-			say(id,"Invalid Date , provide it in DD-MM-YYYY format")
+			say(id,INVALID_DOB_ERROR_TEXT["#{@language}"])
 			edit_kid_dob(id)
 		end
 		if dob !=nil then
@@ -204,55 +219,57 @@ class MessengerBot
 			say(id,"Got it, #{date_full_format}")
 			user.update_attributes(:kid_dob => kid_dob)
 			VaccinationScheduleEditor.new.update_kid_record(id,dob)
-			say(id,"Done, We have updated your Kid Date Of Birth!")
+			say(id,KID_DOB_UPDATED_TEXT["#{@language}"])
 			send_quick_reply(id)
 		end	
 	end
 
-	#Method used to retrive the user profile when rejoin to the bot
+	# Method used to retrive the user profile when rejoin to the bot
 	def old_user(id)
-		MessengerBot.say(id,"You can edit your previous records, or continue with the same")
+		MessengerBot.say(id,OLD_USER_GREETING_CONTENT["#{@language}"])
 		ProfileEditor.new.get_parent_profile(id)
 		MessengerBot.send_quick_reply(id)
 	end
 
-	#Initial configuration for the bot 
+	# Initial configuration for the bot 
 	Facebook::Messenger::Subscriptions.subscribe(access_token: ENV["FB_ACCESS_TOKEN"])
 	greeting_response 		 =HTTParty.post(FB_PAGE,  headers: HEADER, body: GREETING.to_json )
 	get_started_response	 =HTTParty.post(FB_PAGE,  headers: HEADER, body: GET_STARTED.to_json)
 	persistent_menu_response =HTTParty.post(FB_PAGE, headers: HEADER, body: PERSISTENT_MENU.to_json)
 
-	#Triggers whenever a message has got
+	# Triggers whenever a message has got
 	Bot.on :message do |message|
 		id = message.sender["id"]
 		call_message(id,message.text)
 	end
 
-	#Triggers whenever a postback happens
+	# Triggers whenever a postback happens
 	Bot.on :postback do |postback|
 		id = postback.sender["id"]
 		call_postback(id,postback.payload)
 	end
 
-	#Method to handle bot messages
+	# Method to handle bot messages
 	def self.call_message(id,message_text)
 		typing_on(id)
 		get_profile(id)
+		@language = @locale[0,2]
 		case message_text.downcase
 		when "hi"
-			say(id,"Hi #{@first_name} #{@last_name} glad to see you!")
+			hi_message_reply_text = GREETING_MESSAGE_SALUTATION["#{@language}"] + "#{@first_name} #{@last_name}! " + HI_MESSAGE_CONTENT["#{@language}"]
+			say(id,hi_message_reply_text)
 			send_quick_reply(id)
-		when "upcoming vaccines"
+		when UPCOMING_VACCINATION_MESSAGE_TEXT["#{@language}"]
 			FetchVaccinationDetails.new.upcoming(id)
-		when "previous vaccines"
+		when PREVIOUS_VACCINATION_MESSAGE_TEXT["#{@language}"]
 			FetchVaccinationDetails.new.previous(id)
-		when "profile"
+		when PROFILE_MESSAGE_TEXT["#{@language}"]
 			ProfileEditor.new.get_parent_profile(id)
-		when "edit kid name"
+		when EDIT_KID_NAME_TEXT["#{@language}"]
 			MessengerBot.edit_kid_name(id)
-		when "edit kid dob"
+		when EDIT_KID_DOB_TEXT["#{@language}"]
 			MessengerBot.edit_kid_dob(id)
-		when "edit kid gender"
+		when EDIT_KID_GENDER_TEXT["#{@language}"]
 			MessengerBot.edit_kid_gender(id)
 		else
 			handle_wit_response(id,message_text)
@@ -269,11 +286,11 @@ class MessengerBot
 				user = VaccinationSchedule.find_by_parent_facebook_userid(id)
 				if wit_response["gender_value"][0]["value"] == "MALE" then
 					user.update_attributes(:kid_gender => "male")
-					say(id,"Done, We have edited your Kid Gender!")
+					say(id,KID_GENDER_UPDATED_TEXT["#{@language}"])
 					send_quick_reply(id)
 				elsif wit_response["gender_value"][0]["value"] == "FEMALE" then
 					user.update_attributes(:kid_gender => "female")
-					say(id,"Done, We have edited your Kid Gender!")
+					say(id,KID_GENDER_UPDATED_TEXT["#{@language}"])
 					send_quick_reply(id)
 				else
 					MessengerBot.call_postback(id,wit_response["intent"][0]["value"])
@@ -300,10 +317,13 @@ class MessengerBot
 	#Method to handle postbacks
 	def self.call_postback(id,postback_payload)
 		typing_on(id)
+		get_profile(id)
+		@language = @locale[0,2]
 		case postback_payload
 		when "GET_STARTED"
 			get_profile(id)
-			say(id,"Hey #{@first_name} #{@last_name}! Glad to have you on board. I will keep reminding you about the vaccination days for your kids.")
+			greeting_text = GREETING_MESSAGE_SALUTATION["#{@language}"] + "#{@first_name} #{@last_name}! " + GREETING_MESSAGE_CONTENT["#{@language}"]
+			say(id,greeting_text)
 			send_terms_and_condition(id)
 			user = VaccinationSchedule.find_by_parent_facebook_userid(id)
 			if user == nil then
@@ -324,7 +344,7 @@ class MessengerBot
 		when "UNSUBSCRIBE"
 			SubscriptionClass.new.unsubscribe(id)
 		when "WHY_SUBSCRIBE"
-			say(id,"I will remind you about the vaccination days for your kid on the appropriate dates.")
+			say(id, WHY_SUBSCRIBE_TEXT["#{@language}"])
 		when "EDIT_KID_NAME"
 			MessengerBot.edit_kid_name(id)
 		when "EDIT_KID_GENDER"
@@ -332,11 +352,12 @@ class MessengerBot
 		when "EDIT_KID_DOB"
 			MessengerBot.edit_kid_dob(id)
 		when "HI"
-			say(id,"Hi #{@first_name} #{@last_name} Glad to see you!")
+			hi_message_reply_text = GREETING_MESSAGE_SALUTATION["#{@language}"] + "#{@first_name} #{@last_name}! " + HI_MESSAGE_CONTENT["#{@language}"]
+			say(id,hi_message_reply_text)
 			send_quick_reply(id)
 		else
-			say(id, "Sorry I couldn't understand that.. 🙁")
-			say(id, "Try these simple commands,\n*Show my upcoming vaccines\n*what are my past vaccines?\n*change my kid name\n*show my profile")
+			say(id, COULDNOT_UNDERSTAND_THE_MESSAGE_TEXT["#{@language}"])
+			say(id, HELP_TEXT["#{@language}"])
 		end
 	end
 end
