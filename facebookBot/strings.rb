@@ -50,7 +50,7 @@ class MessengerBot
 
 	UPCOMING_VACCINATION_MESSAGE_TEXT = {
 		"en" => "upcoming vaccines",
-		"ta" => "எதிர்வரும் தடுப்பூசிகள்"
+		"ta" => "எதிர்வரும் தடுப்பூசி"
 	}
 	PREVIOUS_VACCINATION_MESSAGE_TEXT = {
 		"en" => "previous vaccines",
