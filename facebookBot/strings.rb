@@ -113,6 +113,26 @@ class MessengerBot
 		"en" => "Tell me your your kid name",
 		"ta" => "உங்கள் குழந்தையின் பெயரை சொல்லவும்"
 	}
+	ASK_KID_GENDER = {
+		"en" => "Boy or Girl?",
+		"ta" => "ஆண் அல்லது பெண்"
+	}
+	BOY_TEXT = {
+		"en" => "boy",
+		"ta" => "சிறுவன்"
+	}
+	MALE_TEXT = {
+		"en" => "male",
+		"ta" => "ஆண்"
+	}
+	GIRL_TEXT = {
+		"en" => "girl",
+		"ta" => "சிறுமி"
+	}
+	FEMALE_TEXT = {
+		"en" => "female",
+		"ta" => "பெண்"
+	}
 	GOT_IT_TEXT = {
 		"en" => "Got it, ",
 		"ta" => "புரிந்தது"

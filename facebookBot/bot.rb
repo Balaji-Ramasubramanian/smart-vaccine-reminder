@@ -129,11 +129,11 @@ class MessengerBot
 
 	# Initial configuration method to get kid Gender
 	def self.get_gender(id,kid_name,kid_dob)
-		say(id,"Boy or girl child?")
+		say(id,ASK_KID_GENDER["#{@language}"])
 		Bot.on :message do |message|
-			if((message.text).downcase == "boy" || (message.text).downcase == "male" ) then
+			if((message.text).downcase == BOY_TEXT["#{@language}"] || (message.text).downcase == MALE_TEXT["#{@language}"] ) then
 				kid_gender = "male"
-			elsif ((message.text).downcase == "girl" || (message.text).downcase == "female") then
+			elsif ((message.text).downcase == GIRL_TEXT["#{@language}"] || (message.text).downcase == FEMALE_TEXT["#{@language}"]) then
 				kid_gender = "female"
 			else
 				say(id,INVALID_GENDER_ERROR_TEXT["#{@language}"])
@@ -171,11 +171,11 @@ class MessengerBot
 	# Method to edit kid gender in the database
 	def self.edit_kid_gender(id)
 		user = VaccinationSchedule.find_by_parent_facebook_userid(id)
-		say(id,"Male or Female kid?")
+		say(id,ASK_KID_GENDER["#{@language}"])
 		Bot.on :message do |message|
-			if((message.text).downcase == "boy" || (message.text).downcase == "male" ) then
+			if((message.text).downcase == BOY_TEXT["#{@language}"] || (message.text).downcase == MALE_TEXT["#{@language}"] ) then
 				kid_gender = "male"
-			elsif ((message.text).downcase == "girl" || (message.text).downcase == "female") then
+			elsif ((message.text).downcase == GIRL_TEXT["#{@language}"] || (message.text).downcase == FEMALE_TEXT["#{@language}"]) then
 				kid_gender = "female"
 			else
 				say(id,INVALID_GENDER_ERROR_TEXT["#{@language}"])
