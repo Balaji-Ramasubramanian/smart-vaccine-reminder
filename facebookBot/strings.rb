@@ -115,7 +115,7 @@ class MessengerBot
 	}
 	ASK_KID_GENDER = {
 		"en" => "Boy or Girl?",
-		"ta" => "ஆண் அல்லது பெண்"
+		"ta" => "ஆண் அல்லது பெண்?"
 	}
 	BOY_TEXT = {
 		"en" => "boy",

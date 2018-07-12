@@ -120,7 +120,7 @@ class MessengerBot
 			end
 			if dob !=nil then
 				date_full_format = dob.strftime("%d %b %Y")
-				reply_text = GOT_IT_TEXT +  "#{date_full_format}"
+				reply_text = GOT_IT_TEXT["#{@language}"] +  "#{date_full_format}"
 				say(id,reply_text)
 				get_gender(id,kid_name,dob)
 			end
