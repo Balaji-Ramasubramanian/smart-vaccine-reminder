@@ -53,17 +53,19 @@ class SubscriptionClass
 
   #Add subscription for user to Vaccine reminder
   def subscribe(id)
+    language = MessengerBot.new.get_language(id) 
     user=VaccinationSchedule.find_by_parent_facebook_userid(id)
     user.update_attributes( :subscription => true )
-    MessengerBot.say(id,SUCCESSFULLY_SUBSCRIBED_TEXT1["#{@language}"])
-    MessengerBot.say(id,SUCCESSFULLY_SUBSCRIBED_TEXT2["#{@language}"]) 
+    MessengerBot.say(id,SUCCESSFULLY_SUBSCRIBED_TEXT1["#{language}"])
+    MessengerBot.say(id,SUCCESSFULLY_SUBSCRIBED_TEXT2["#{language}"]) 
   end
 
   #unsubscribe a User from Vaccine reminder 
   def unsubscribe(id)
+    language = MessengerBot.new.get_language(id)
     user = VaccinationSchedule.find_by_parent_facebook_userid(id)
     user.update_attributes( :subscription => false )
-    MessengerBot.say(id, SUCCESSFULLY_UNSUBSCRIBED_TEXT["#{@language}"])
+    MessengerBot.say(id, SUCCESSFULLY_UNSUBSCRIBED_TEXT["#{language}"])
   end 
 
 
