@@ -23,7 +23,7 @@ class MessengerBot
 			vaccine_url  = vaccination_dates[i][:url]
 			new_element = {
 	            "title": "#{vaccine_name.upcase}",
-	            "subtitle": "Due Date: #{vaccine_date}",
+	            "subtitle": "#{DUE_DATE["#{@language}"]}: #{vaccine_date}",
 			    "buttons":[
 			      {
 			        "type": "web_url",
