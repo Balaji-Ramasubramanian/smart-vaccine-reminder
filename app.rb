@@ -10,7 +10,7 @@ end
 
 #Show the home page
 get "/" do
-  redirect '/index.html'
+  send_file 'index.html'
 end
 
 #Show the terms and conditions page
