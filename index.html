@@ -1,33 +1,75 @@
+<!DOCTYPE html>
 <html>
-<head>
-  <title>Smart Vaccine Reminder</title>
-</head>
-<body>      
-   <!-- Load Facebook SDK for JavaScript -->
-      <div id="fb-root"></div>
-      <script>
-        window.fbAsyncInit = function() {
-          FB.init({
-            xfbml            : true,
-            version          : 'v5.0'
-          });
-        };
 
-        (function(d, s, id) {
-        var js, fjs = d.getElementsByTagName(s)[0];
-        if (d.getElementById(id)) return;
-        js = d.createElement(s); js.id = id;
-        js.src = 'https://connect.facebook.net/en_US/sdk/xfbml.customerchat.js';
-        fjs.parentNode.insertBefore(js, fjs);
-      }(document, 'script', 'facebook-jssdk'));
-    </script>
+  <head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
 
-      <!-- Your customer chat code -->
-      <div class="fb-customerchat"
-        attribution=setup_tool
-        page_id="1780584338910888"
-        logged_in_greeting="Hi! How can we help you?"
-        logged_out_greeting="Hi! How can we help you?">
+    body, html {
+        height: 100%;
+        margin: 0;
+        font-family: Comic Sans MS;
+    }
+
+    .hero-image {
+      background-image: linear-gradient(rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.65)), url("./public/images/vaccine-bg.png");
+      height: 100%;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+      position: relative;
+    }
+
+    .hero-text {
+      text-align: center;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: #f20f57;
+    }
+
+    </style>
+
+  </head>
+
+  <body>
+
+    <div class="hero-image">
+      <div class="hero-text">
+        <h1 style="font-size:50px">Smart Vaccine Reminder</h1>
+        <h3 style="font-size: 25px; color: #1aaaed">We remind you about your child's vaccination days</h3>
       </div>
-</body>
+    </div>
+
+    <!-- Load Facebook SDK for JavaScript -->
+    <div id="fb-root"></div>
+    <script>
+      window.fbAsyncInit = function() {
+        FB.init({
+          xfbml            : true,
+          version          : 'v5.0'
+        });
+      };
+
+      (function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = 'https://connect.facebook.net/en_US/sdk/xfbml.customerchat.js';
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+  </script>
+
+  <!-- Your customer chat code -->
+  <div class="fb-customerchat"
+    attribution=setup_tool
+    page_id="1780584338910888"
+    logged_in_greeting="Hi! How can we help you?"
+    logged_out_greeting="Hi! How can we help you?">
+  </div>
+
+  </body>
+
 </html>
+
